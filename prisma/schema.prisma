@@ -1,0 +1,55 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model users {
+  UserID     String       @id 
+  Name       String       @unique
+  Email      String       @unique
+  Tel        String 
+  Password   String
+  Credit     Int
+  MarketItem MarketItem[]
+}
+
+model MarketItem {
+  ItemID             String               @id
+  Name_item          String
+  Price              String
+  Description        String
+  Date               DateTime
+  UserID             String
+  TypeID             String
+  users              users                @relation(fields: [UserID], references: [UserID])
+  TypeOfItem         TypeOfItem           @relation(fields: [TypeID], references: [TypeID])
+  MarketItem_Sticker MarketItem_Sticker[]
+}
+
+model TypeOfItem {
+  TypeID     String       @id
+  TypeName   String
+  MarketItem MarketItem[]
+}
+
+model MarketItem_Sticker {
+  MarketItem_ItemID      String
+  MarketItem_User_UserID String
+  StickerID              String
+
+  MarketItem MarketItem @relation(fields: [MarketItem_ItemID], references: [ItemID])
+  Sticker    Sticker    @relation(fields: [StickerID], references: [StickerID])
+
+
+  @@id([MarketItem_ItemID, MarketItem_User_UserID, StickerID])
+}
+
+model Sticker {
+  StickerID          String               @id
+  StickerName        String
+  MarketItem_Sticker MarketItem_Sticker[]
+}
