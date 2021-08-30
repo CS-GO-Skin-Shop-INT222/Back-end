@@ -8,22 +8,22 @@ generator client {
 }
 
 model users {
-  UserID     String       @id 
+  UserID     Int          @id @default(autoincrement())
   Name       String       @unique
   Email      String       @unique
-  Tel        String 
+  Tel        String
   Password   String
   Credit     Int
   MarketItem MarketItem[]
 }
 
 model MarketItem {
-  ItemID             String               @id
+  ItemID             Int                  @id @default(autoincrement())
   Name_item          String
   Price              String
   Description        String
   Date               DateTime
-  UserID             String
+  UserID             Int
   TypeID             String
   users              users                @relation(fields: [UserID], references: [UserID])
   TypeOfItem         TypeOfItem           @relation(fields: [TypeID], references: [TypeID])
@@ -37,15 +37,16 @@ model TypeOfItem {
 }
 
 model MarketItem_Sticker {
-  MarketItem_ItemID      String
-  MarketItem_User_UserID String
-  StickerID              String
+  ItemID    Int
+  UserID    Int
+  StickerID String
+  TypeID    String
 
-  MarketItem MarketItem @relation(fields: [MarketItem_ItemID], references: [ItemID])
+  MarketItem MarketItem @relation(fields: [ItemID], references: [ItemID])
   Sticker    Sticker    @relation(fields: [StickerID], references: [StickerID])
 
 
-  @@id([MarketItem_ItemID, MarketItem_User_UserID, StickerID])
+  @@id([ItemID, UserID, StickerID])
 }
 
 model Sticker {
