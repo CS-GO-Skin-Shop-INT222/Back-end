@@ -20,7 +20,7 @@ router.post('/register', async (req, res) => {
         return res.status(400).send("input your info")
     }
     const oldUser = await users.findFirst({
-        where: { Email: Email }
+        where: { Name : Name ,Email: Email  }
     })
     if (oldUser) {
         return res.status(409).send("User is already exist")
@@ -73,7 +73,7 @@ router.put('/edituser/:id', async (req, res) => {
     return res.send(result)
 })
 router.delete("/deleteuser/:id", async (req, res) => {
-    const id = req.params.id
+    const id = req.params
     const result = await users.delete({
         where: { UserID: id }
     })
