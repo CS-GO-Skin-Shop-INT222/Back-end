@@ -36,13 +36,12 @@ model marketitem {
 
 model marketitem_sticker {
   ItemID     Int
-  UserID     Int
   StickerID  String     @db.VarChar(20)
-  marketitem marketitem @relation(fields: [ItemID, UserID], references: [ItemID, UserID])
+  marketitem marketitem @relation(fields: [ItemID], references: [ItemID])
   sticker    sticker    @relation(fields: [StickerID], references: [StickerID])
 
-  @@id([ItemID, UserID, StickerID])
-  @@index([ItemID, UserID], name: "fk_MarketItem_has_Sticker_MarketItem1_idx")
+  @@id([ItemID, StickerID])
+  @@index([ItemID], name: "fk_MarketItem_has_Sticker_MarketItem1_idx")
   @@index([StickerID], name: "fk_MarketItem_has_Sticker_Sticker1_idx")
 }
 

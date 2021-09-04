@@ -1,11 +1,10 @@
 const router = require('express').Router();
 require("dotenv").config();
-const express = require('express')
 const { PrismaClient } = require('@prisma/client')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const users = new PrismaClient().users
-const { marketItem } = new PrismaClient()
+
 
 
 router.get('/users', async (req, res) => {
@@ -61,11 +60,8 @@ router.post('/login', async (req, res) => {
 })
 
 
-
-
-
 router.put('/edituser/:id', async (req, res) => {
-    let id = req.params.id
+    let id = Number(req.params.id)
     const result = await users.update({
         data: req.body,
         where: { UserID: id }
@@ -73,7 +69,7 @@ router.put('/edituser/:id', async (req, res) => {
     return res.send(result)
 })
 router.delete("/deleteuser/:id", async (req, res) => {
-    const id = req.params
+    const id = Number(req.params.id)
     const result = await users.delete({
         where: { UserID: id }
     })
