@@ -49,19 +49,19 @@ router.put('/editItem/:id', async (req, res) => {
   let id = Number(req.params.id)
   const result = await marketitem.update({
     data: req.body,
-    where: { ItemID: id },
-    include:{
-      marketitem_sticker:{include:{sticker :{select:{StickerName :true}}}}
-    }
+    where: { ItemID: id }
   })
   return res.send(result)
 })
 router.delete("/deleteItem/:id", async (req, res) => {
   const id = Number(req.params.id)
-  const result = await marketitem.delete({
+  await marketitem_sticker.deleteMany({
     where: { ItemID: id }
   })
-  return res.send(result)
+  const result = await marketitem.deleteMany({
+    where: { ItemID: id }
+  })
+  return res.send("Delete successfully")
 })
 
 module.exports = router;

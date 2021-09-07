@@ -1,6 +1,7 @@
 const router = require('express').Router();
 require("dotenv").config();
 const { PrismaClient } = require('@prisma/client')
+const { marketitem } = new PrismaClient()
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const users = new PrismaClient().users
@@ -68,12 +69,17 @@ router.put('/edituser/:id', async (req, res) => {
     })
     return res.send(result)
 })
+
+
+
 router.delete("/deleteuser/:id", async (req, res) => {
     const id = Number(req.params.id)
-    const result = await users.delete({
+
+    const result = await users.delete ({
         where: { UserID: id }
     })
-    return res.send(result)
+    return res.send(result +"successfully" )
+  
 })
 
 module.exports = router;

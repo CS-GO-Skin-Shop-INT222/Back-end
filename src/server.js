@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }))
 // app.use('/api/user', authRoute);
 app.use('/api/marketitem' , require('./routes/MarketItem'))
 app.use('/api/user',require('./routes/Users'))
-
+app.use('/api/stickeritem', require('./routes/Sticker'))
 app.listen(5000, () =>{
     console.log('server run on port 5000')
 })
