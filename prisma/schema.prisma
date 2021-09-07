@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["referentialActions"]
 }
 
 datasource db {
@@ -26,7 +27,7 @@ model marketitem {
   UserID             Int
   TypeID             String               @db.VarChar(20)
   typeofitem         typeofitem           @relation(fields: [TypeID], references: [TypeID])
-  users              users                @relation(fields: [UserID], references: [UserID])
+  users              users                @relation(fields: [UserID], references: [UserID] )
   marketitem_sticker marketitem_sticker[]
 
   @@id([ItemID, UserID, TypeID])
@@ -37,7 +38,7 @@ model marketitem {
 model marketitem_sticker {
   ItemID     Int
   StickerID  String     @db.VarChar(20)
-  marketitem marketitem @relation(fields: [ItemID], references: [ItemID])
+  marketitem marketitem @relation(fields: [ItemID], references: [ItemID], onDelete: Cascade)
   sticker    sticker    @relation(fields: [StickerID], references: [StickerID])
 
   @@id([ItemID, StickerID])

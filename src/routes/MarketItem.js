@@ -55,10 +55,7 @@ router.put('/editItem/:id', async (req, res) => {
 })
 router.delete("/deleteItem/:id", async (req, res) => {
   const id = Number(req.params.id)
-  await marketitem_sticker.deleteMany({
-    where: { ItemID: id }
-  })
-  const result = await marketitem.deleteMany({
+  const result = await marketitem.delete({
     where: { ItemID: id }
   })
   return res.send("Delete successfully")
