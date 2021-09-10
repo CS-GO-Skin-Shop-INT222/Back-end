@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["referentialActions"]
 }
 
@@ -9,51 +9,63 @@ datasource db {
 }
 
 model users {
-  UserID     Int          @id @unique @default(autoincrement())
-  Name       String       @unique @db.VarChar(20)
-  Email      String       @unique @db.VarChar(45)
-  Tel        String       @db.VarChar(45)
-  Password   String       @db.VarChar(256)
-  Credit     Int?
-  marketitem marketitem[]
+  UserID    Int         @id @unique @default(autoincrement())
+  Name      String      @unique @db.VarChar(20)
+  Email     String      @unique @db.VarChar(45)
+  Tel       String      @db.VarChar(45)
+  Password  String      @db.VarChar(256)
+  Credit    Int?
+  inventory inventory[]
 }
 
 model marketitem {
-  ItemID             Int                  @unique @default(autoincrement())
-  Name_item          String               @db.VarChar(45)
-  Price              Int
-  Description        String               @db.VarChar(256)
-  Date               DateTime             @db.Timestamp(0)
-  UserID             Int
-  TypeID             String               @db.VarChar(20)
-  typeofitem         typeofitem           @relation(fields: [TypeID], references: [TypeID])
-  users              users                @relation(fields: [UserID], references: [UserID] )
-  marketitem_sticker marketitem_sticker[]
+  MarketItem Int       @default(autoincrement())
+  ItemID     Int
+  UserID     Int
+  TypeID     String    @db.VarChar(20)
+  inventory  inventory @relation(fields: [ItemID, UserID, TypeID], references: [ItemID, UserID, TypeID], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([MarketItem, ItemID, UserID, TypeID])
+  @@index([ItemID, UserID, TypeID], name: "fk_MarketItem_Inventory1_idx")
+}
+
+model sticker {
+  StickerID         String              @id @unique @db.VarChar(20)
+  StickerName       String              @unique @db.VarChar(100)
+  inventory_sticker inventory_sticker[]
+}
+
+model typeofitem {
+  TypeID    String      @id @unique @db.VarChar(20)
+  TypeName  String      @unique @db.VarChar(45)
+  inventory inventory[]
+}
+
+model inventory {
+  ItemID            Int                 @unique @default(autoincrement())
+  Name_item         String              @db.VarChar(45)
+  Price             Int
+  Description       String              @db.VarChar(256)
+  Date              DateTime            @db.Timestamp(0)
+  UserID            Int
+  TypeID            String              @db.VarChar(20)
+  typeofitem        typeofitem          @relation(fields: [TypeID], references: [TypeID], onDelete: NoAction, onUpdate: NoAction)
+  users             users               @relation(fields: [UserID], references: [UserID], onDelete: NoAction, onUpdate: NoAction)
+  inventory_sticker inventory_sticker[]
+  marketitem        marketitem[]
 
   @@id([ItemID, UserID, TypeID])
   @@index([TypeID], name: "fk_MarketItem_TypeOfItem1_idx")
   @@index([UserID], name: "fk_MarketItem_Users_idx")
 }
 
-model marketitem_sticker {
-  ItemID     Int
-  StickerID  String     @db.VarChar(20)
-  marketitem marketitem @relation(fields: [ItemID], references: [ItemID], onDelete: Cascade)
-  sticker    sticker    @relation(fields: [StickerID], references: [StickerID])
+model inventory_sticker {
+  ItemID    Int
+  StickerID String    @db.VarChar(20)
+  inventory inventory @relation(fields: [ItemID], references: [ItemID], onDelete: Cascade, onUpdate: NoAction)
+  sticker   sticker   @relation(fields: [StickerID], references: [StickerID], onDelete: NoAction, onUpdate: NoAction)
 
   @@id([ItemID, StickerID])
   @@index([ItemID], name: "fk_MarketItem_has_Sticker_MarketItem1_idx")
   @@index([StickerID], name: "fk_MarketItem_has_Sticker_Sticker1_idx")
-}
-
-model sticker {
-  StickerID          String               @id @unique @db.VarChar(20)
-  StickerName        String               @unique @db.VarChar(100)
-  marketitem_sticker marketitem_sticker[]
-}
-
-model typeofitem {
-  TypeID     String       @id @unique @db.VarChar(20)
-  TypeName   String       @unique @db.VarChar(45)
-  marketitem marketitem[]
 }
