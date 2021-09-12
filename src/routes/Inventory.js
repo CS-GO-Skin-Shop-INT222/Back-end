@@ -47,11 +47,15 @@ router.post('/addItem', async (req, res) => {
 
 router.put('/editItem/:id', async (req, res) => {
   let id = Number(req.params.id)
-  const result = await inventory.update({
+  const result = await inventory.updateMany({
     data: req.body,
     where: { ItemID: id }
   })
+  if(result.count == 0 ){
+    return res.status(400).send("don't have item")
+  }
   return res.send(result)
+  console.log(result)
 })
 router.delete("/deleteItem/:id", async (req, res) => {
   const id = Number(req.params.id)
