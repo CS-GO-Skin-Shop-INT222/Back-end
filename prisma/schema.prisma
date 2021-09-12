@@ -19,13 +19,13 @@ model users {
 }
 
 model marketitem {
-  MarketItem Int       @default(autoincrement())
-  ItemID     Int
-  UserID     Int
-  TypeID     String    @db.VarChar(20)
-  inventory  inventory @relation(fields: [ItemID, UserID, TypeID], references: [ItemID, UserID, TypeID], onDelete: NoAction, onUpdate: NoAction)
+  MarketItemID Int       @unique @default(autoincrement())
+  ItemID       Int
+  UserID       Int
+  TypeID       String    @db.VarChar(20)
+  inventory    inventory @relation(fields: [ItemID, UserID, TypeID], references: [ItemID, UserID, TypeID], onDelete: NoAction, onUpdate: NoAction)
 
-  @@id([MarketItem, ItemID, UserID, TypeID])
+  @@id([MarketItemID, ItemID, UserID, TypeID])
   @@index([ItemID, UserID, TypeID], name: "fk_MarketItem_Inventory1_idx")
 }
 

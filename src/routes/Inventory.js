@@ -17,6 +17,20 @@ router.get('/allItem', async (req, res) => {
   return res.send(result)
 })
 
+router.get('/getitem/:id', async (req, res) => {
+  const id = Number(req.params.id)
+  const result = await inventory.findUnique({
+    where: { ItemID: id },
+    include: {
+      users: { select: { Name: true, Email: true } },
+      typeofitem: { select: { TypeName: true } },
+      inventory_sticker: { include: { sticker: { select: { StickerName: true } } } }
+    }
+  })
+  return res.send(result)
+  console.log(result)
+})
+
 router.post('/addItem', async (req, res) => {
   let { Name_item, Price, Description, UserID, TypeID, Stickers } = req.body
   if (!(Name_item && Price && Description && TypeID && UserID)) {
@@ -41,7 +55,6 @@ router.post('/addItem', async (req, res) => {
       }
     })
   }
-
   return res.send("successfully")
 })
 
@@ -51,7 +64,7 @@ router.put('/editItem/:id', async (req, res) => {
     data: req.body,
     where: { ItemID: id }
   })
-  if(result.count == 0 ){
+  if (result.count == 0) {
     return res.status(400).send("don't have item")
   }
   return res.send(result)

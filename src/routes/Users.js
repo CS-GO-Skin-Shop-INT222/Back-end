@@ -13,6 +13,15 @@ router.get('/users', async (req, res) => {
     return res.send(result)
 })
 
+router.get('/user/:id', async (req, res) => {
+    const id = Number(req.params.id)
+    const result = await users.findUnique({
+      where: {  UserID: id }
+    })
+    return res.send(result)
+    console.log(result)
+  })
+
 
 router.post('/register', async (req, res) => {
     const { Name, Email, Tel, Password, Credit } = req.body
@@ -67,8 +76,12 @@ router.put('/edituser/:id', async (req, res) => {
         data: req.body,
         where: { UserID: id }
     })
-    return res.send(result)
-})
+    if(result.count == 0 ){
+        return res.status(400).send("don't have user ")
+      }
+      return res.send(result)
+      console.log(result)
+    })
 
 
 
