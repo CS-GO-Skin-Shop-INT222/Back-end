@@ -1,11 +1,13 @@
 require("dotenv").config();
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const { API_PORT } = process.env
 const port = process.env.PORT || API_PORT;
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cors())
 
 ///import routes
 const authRoute = require('./middleware/auth');
