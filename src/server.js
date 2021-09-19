@@ -7,7 +7,10 @@ const port = process.env.PORT || API_PORT;
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(cors())
+app.use(cors({
+    origin : process.env.ORIGIN,
+    methods:['GET', 'POST', 'PUT', 'DELETE' , 'HEAD' , 'OPTIONS'],
+}))
 
 ///import routes
 const authRoute = require('./middleware/auth');
