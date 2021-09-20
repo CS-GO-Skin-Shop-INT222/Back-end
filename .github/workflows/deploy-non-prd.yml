@@ -42,7 +42,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           docker_name: 'ghcr.io/cs-go-skin-shop-int222/back-end:${{ env.ENV_NAME }}'
-          # target: 'CHANGEME'
+          target: 'https://blackcarrack.tech/'
   deploy:
     needs: build
     runs-on: ubuntu-20.04
@@ -52,10 +52,10 @@ jobs:
       - name: Set env
         run: echo "ENV_NAME=$( [ "$GITHUB_REF" == "refs/heads/main" ] && echo 'uat' || echo ${GITHUB_REF##*/} )" >> $GITHUB_ENV
       - run: echo $GITHUB_ENV
-      # - name: deploy with Execute SSH commmands on remote server
-      #   uses: JimCronqvist/action-ssh@0.1.1
-      #   with:
-      #     hosts: 'user@domain.com'
-      #     privateKey: ${{ secrets.PRIVATE_KEY }}
-      #     command: |
-      #       ls -lah
+      - name: deploy with Execute SSH commmands on remote server
+        uses: JimCronqvist/action-ssh@0.1.1
+        with:
+          hosts: ${{ secrets.SSH_HOST }}
+          privateKey: ${{ secrets.PRIVATE_KEY }}
+          command: |
+            ls -la
