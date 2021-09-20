@@ -50,7 +50,7 @@ model inventory {
   UserID            Int
   TypeID            String              @db.VarChar(20)
   typeofitem        typeofitem          @relation(fields: [TypeID], references: [TypeID], onDelete: NoAction, onUpdate: NoAction)
-  users             users               @relation(fields: [UserID], references: [UserID], onDelete: NoAction, onUpdate: Cascade)
+  users             users               @relation(fields: [UserID], references: [UserID], onDelete: Cascade, onUpdate: Cascade)
   inventory_sticker inventory_sticker[]
   marketitem        marketitem[]
 

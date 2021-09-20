@@ -42,7 +42,7 @@ router.post('/addItem', async (req, res) => {
       Description: Description,
       Date: lastUpdate,
       UserID: UserID,
-      TypeID, TypeID
+      TypeID: TypeID
     }
   })
   console.log(result)

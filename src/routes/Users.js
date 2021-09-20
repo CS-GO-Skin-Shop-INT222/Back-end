@@ -19,7 +19,6 @@ router.get('/user/:id', async (req, res) => {
       where: {  UserID: id }
     })
     return res.send(result)
-    console.log(result)
   })
 
 
@@ -36,7 +35,7 @@ router.post('/register', async (req, res) => {
     }
     encryptedPassword = await bcrypt.hash(Password, 10);
     const hashPassword = await bcrypt.hash(Password, encryptedPassword)
-    let result = await users.create({
+    await users.create({
         data: {
             Name: Name,
             Email: Email.toLowerCase(),
@@ -80,18 +79,16 @@ router.put('/edituser/:id', async (req, res) => {
         return res.status(400).send("don't have user ")
       }
       return res.send(result)
-      console.log(result)
     })
 
 
 
 router.delete("/deleteuser/:id", async (req, res) => {
     const id = Number(req.params.id)
-    const result = await users.deleteMany ({
+     await users.deleteMany ({
         where: { UserID: id }
     })
     return res.send("deleteuser successfully" )
-  
 })
 
 module.exports = router;
