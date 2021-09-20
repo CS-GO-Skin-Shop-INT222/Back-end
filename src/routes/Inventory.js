@@ -28,7 +28,6 @@ router.get('/getitem/:id', async (req, res) => {
     }
   })
   return res.send(result)
-  console.log(result)
 })
 
 router.post('/addItem', async (req, res) => {
@@ -43,7 +42,7 @@ router.post('/addItem', async (req, res) => {
       Description: Description,
       Date: lastUpdate,
       UserID: UserID,
-      TypeID, TypeID,
+      TypeID, TypeID
     }
   })
   console.log(result)
@@ -68,14 +67,13 @@ router.put('/editItem/:id', async (req, res) => {
     return res.status(400).send("don't have item")
   }
   return res.send(result)
-  console.log(result)
 })
 router.delete("/deleteItem/:id", async (req, res) => {
   const id = Number(req.params.id)
   const result = await inventory.delete({
     where: { ItemID: id }
   })
-  return res.send("Delete successfully")
+  return res.send("Delete successfully" + result)
 })
 
 module.exports = router;
