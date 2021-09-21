@@ -21,7 +21,7 @@ const sticker = require('./routes/Sticker')
 
 /// route middlewares
 // app.use('/api/user', authRoute);
-app.use('/api/inventory',authRoute, inventory)
+app.use('/api/inventory', inventory)
 app.use('/api/marketitem' , marketitem)
 app.use('/api/user',user)
 app.use('/api/stickeritem', sticker)

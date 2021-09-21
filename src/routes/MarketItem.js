@@ -25,7 +25,6 @@ router.get('/getitem/:id', async (req, res) => {
       }
   })
   return res.send(result)
-  console.log(result)
 })
 
 router.post('/addmarket', async (req, res) => {
