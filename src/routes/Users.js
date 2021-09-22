@@ -5,12 +5,16 @@ const { inventory } = new PrismaClient()
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const users = new PrismaClient().users
-
+const auth = require('../middleware/auth')
 
 
 router.get('/users', async (req, res) => {
     const result = await users.findMany()
     return res.send(result)
+})
+
+router.get('/profile',auth, async (req, res) =>{
+    res.send({user:req.user})
 })
 
 router.get('/user/:id', async (req, res) => {

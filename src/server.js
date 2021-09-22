@@ -23,7 +23,7 @@ const sticker = require('./routes/Sticker')
 // app.use('/api/user', authRoute);
 app.use('/api/inventory', inventory)
 app.use('/api/marketitem' , marketitem)
-app.use('/api/user',user)
+app.use('/api/user' ,user)
 app.use('/api/stickeritem', sticker)
 
 app.listen(port, () => {
