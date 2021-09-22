@@ -12,8 +12,8 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ["npx","prisma","db","push"]
+RUN npx prisma db push
 
-CMD ["npx","prisma","generate"]
+RUN npx prisma generate
 
 CMD ["npm","run","dev"]
