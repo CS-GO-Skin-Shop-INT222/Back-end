@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-COPY [".env","./"]              
+ADD ["/.env", "./.env"]              
 
 RUN npm install
 
@@ -16,4 +16,4 @@ RUN npx prisma db push
 
 RUN npx prisma generate
 
-CMD ["npm","run","dev"]
+CMD ["npm", "run", "dev"]
