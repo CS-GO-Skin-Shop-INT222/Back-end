@@ -34,7 +34,6 @@ jobs:
           echo API_PORT=${{ secrets.API_PORT }} >> .env
           echo TOKEN=${{ secrets.TOKEN }} >> .env
           echo ORIGIN=${{ secrets.ORIGIN }} >> .env
-          ls -la
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
@@ -49,7 +48,6 @@ jobs:
         uses: zaproxy/action-baseline@v0.4.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          docker_name: 'ghcr.io/cs-go-skin-shop-int222/back-end:${{ env.ENV_NAME }}'
           target: 'https://blackcarrack.tech/'
   deploy:
     needs: build
