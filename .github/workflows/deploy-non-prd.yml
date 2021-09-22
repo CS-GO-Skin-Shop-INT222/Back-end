@@ -65,4 +65,6 @@ jobs:
           hosts: ${{ secrets.SSH_HOST }}
           privateKey: ${{ secrets.PRIVATE_KEY }}
           command: |
-            ls -la
+            docker pull ghcr.io/cs-go-skin-shop-int222/back-end:${{ env.ENV_NAME }}
+            docker-compose -f ~/docker-compose/app-compose.yml down
+            docker-compose -f ~/docker-compose/app-compose.yml up -d
