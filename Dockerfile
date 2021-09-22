@@ -10,4 +10,8 @@ COPY . .
 
 EXPOSE 5000
 
+CMD ["npx","prisma","db","push"]
+
+CMD ["npx","prisma","generate"]
+
 CMD ["npm","run","dev"]
