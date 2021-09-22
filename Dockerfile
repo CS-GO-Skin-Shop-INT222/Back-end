@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-ADD ["/.env", "./.env"]              
+ADD ["/env", "./.env"]              
 
 RUN npm install
 
