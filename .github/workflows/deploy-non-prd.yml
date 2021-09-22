@@ -34,6 +34,7 @@ jobs:
           echo API_PORT=${{ secrets.API_PORT }} >> .env
           echo TOKEN=${{ secrets.TOKEN }} >> .env
           echo ORIGIN=${{ secrets.ORIGIN }} >> .env
+          ls -la
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
