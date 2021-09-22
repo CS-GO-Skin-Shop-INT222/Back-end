@@ -29,13 +29,13 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: create env file
         run: |
-          touch env
-          echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> env
-          echo API_PORT=${{ secrets.API_PORT }} >> env
-          echo TOKEN=${{ secrets.TOKEN }} >> env
-          echo ORIGIN=${{ secrets.ORIGIN }} >> env
+          touch tmpenv
+          echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> tmpenv
+          echo API_PORT=${{ secrets.API_PORT }} >> tmpenv
+          echo TOKEN=${{ secrets.TOKEN }} >> tmpenv
+          echo ORIGIN=${{ secrets.ORIGIN }} >> tmpenv
           ls -la
-          cat env
+          cat tmpenv
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
