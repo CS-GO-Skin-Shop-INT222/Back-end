@@ -51,6 +51,7 @@ jobs:
           
       - name: Anchore Container Scan
         uses: anchore/scan-action@v3.0.0
+        id: scan
         with:
           image: "ghcr.io/cs-go-skin-shop-int222/back-end:${{ env.ENV_NAME }}"
           fail-build: false
