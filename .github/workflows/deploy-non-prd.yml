@@ -51,7 +51,7 @@ jobs:
         uses: zaproxy/action-baseline@v0.4.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'https://blackcarrack.tech/'
+          target: 'https://api.blackcarrack.tech/'
   deploy:
     needs: build
     runs-on: ubuntu-20.04
