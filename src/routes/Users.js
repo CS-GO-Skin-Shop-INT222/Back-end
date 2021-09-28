@@ -1,7 +1,7 @@
 const router = require('express').Router();
 require("dotenv").config();
 const { PrismaClient } = require('@prisma/client')
-const { inventory } = new PrismaClient()
+const { userTokens } = new PrismaClient()
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const users = new PrismaClient().users
@@ -58,20 +58,35 @@ router.post('/login', async (req, res) => {
             where: { Email: Email }
         })
         const validPassword =await bcrypt.compare(Password,findedUser.Password)
-       
         if (!(findedUser && validPassword)) {
             res.status(400).send("invalid email or password")
         }
         
          delete findedUser.password 
-        const token =jwt.sign(findedUser, process.env.TOKEN,{expiresIn:"1h"})
+        const token =jwt.sign(findedUser, process.env.TOKEN);
+        await userTokens.create({
+            data:{
+                Token: token,
+                UserID: findedUser.UserID
+            }
+        })
        return res.header("access-token",token).send({ token: token})
 
-    } catch(err) {
-        console.log(err)
+    } catch(error) {
+        res.status(400).send({error: error.message})
      }
 })
 
+router.delete("/logout",auth, async (req, res) => {
+try{
+    await userTokens.deleteMany({
+        where:{token:req.Token}
+    })
+    res.status(200).send("logout finished")
+}catch(error){
+    res.status(400).send({error:error.message})
+}
+})
 
 router.put('/edituser/:id', async (req, res) => {
     let id = Number(req.params.id)

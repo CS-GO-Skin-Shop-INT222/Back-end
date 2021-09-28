@@ -9,13 +9,14 @@ datasource db {
 }
 
 model users {
-  UserID    Int         @id @unique @default(autoincrement())
-  Name      String      @unique @db.VarChar(20)
-  Email     String      @unique @db.VarChar(45)
-  Tel       String      @db.VarChar(45)
-  Password  String      @db.VarChar(256)
-  Credit    Int?
-  inventory inventory[]
+  UserID     Int          @id @unique @default(autoincrement())
+  Name       String       @unique @db.VarChar(20)
+  Email      String       @unique @db.VarChar(45)
+  Tel        String       @db.VarChar(45)
+  Password   String       @db.VarChar(256)
+  Credit     Int?
+  inventory  inventory[]
+  userTokens userTokens[]
 }
 
 model marketitem {
@@ -50,7 +51,7 @@ model inventory {
   UserID            Int
   TypeID            String              @db.VarChar(20)
   typeofitem        typeofitem          @relation(fields: [TypeID], references: [TypeID], onDelete: NoAction, onUpdate: NoAction)
-  users             users               @relation(fields: [UserID], references: [UserID], onDelete: Cascade, onUpdate: Cascade)
+  users             users               @relation(fields: [UserID], references: [UserID], onDelete: Cascade)
   inventory_sticker inventory_sticker[]
   marketitem        marketitem[]
 
@@ -68,4 +69,13 @@ model inventory_sticker {
   @@id([ItemID, StickerID])
   @@index([ItemID], name: "fk_MarketItem_has_Sticker_MarketItem1_idx")
   @@index([StickerID], name: "fk_MarketItem_has_Sticker_Sticker1_idx")
+}
+
+model userTokens {
+  TokensID Int    @id @default(autoincrement())
+  Token    String @unique @db.VarChar(500)
+  UserID   Int
+  users    users  @relation(fields: [UserID], references: [UserID], onDelete: Cascade)
+
+  @@index([UserID], name: "fk_userTokens_Users1_idx")
 }
