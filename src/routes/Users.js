@@ -59,9 +59,8 @@ router.post('/login', async (req, res) => {
         })
         const validPassword =await bcrypt.compare(Password,findedUser.Password)
         if (!(findedUser && validPassword)) {
-            res.status(400).send("invalid email or password")
-        }
-        
+            res.status(400).send("invalid email or password ")
+        } 
          delete findedUser.password 
         const token =jwt.sign(findedUser, process.env.TOKEN);
         await userTokens.create({
@@ -70,7 +69,7 @@ router.post('/login', async (req, res) => {
                 UserID: findedUser.UserID
             }
         })
-       return res.header("access-token",token).send({ token: token})
+       return res.status(200).header("access-token",token).send({ token: token})
 
     } catch(error) {
         res.status(400).send({error: error.message})
