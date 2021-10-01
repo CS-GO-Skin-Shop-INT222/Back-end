@@ -10,11 +10,11 @@ const auth = require('../middleware/auth')
 
 router.get('/users', async (req, res) => {
     const result = await users.findMany()
-    return res.send(result)
+    return res.status(200).send(result)
 })
 
 router.get('/profile',auth, async (req, res) =>{
-    res.send({user:req.user})
+    res.status(200).send({user:req.user})
 })
 
 router.get('/user/:id', async (req, res) => {
@@ -22,7 +22,7 @@ router.get('/user/:id', async (req, res) => {
     const result = await users.findUnique({
       where: {  UserID: id }
     })
-    return res.send(result)
+    return res.status(200).send(result)
   })
 
 
@@ -58,8 +58,11 @@ router.post('/login', async (req, res) => {
             where: { Email: Email }
         })
         const validPassword =await bcrypt.compare(Password,findedUser.Password)
-        if (!(findedUser && validPassword)) {
-            res.status(400).send("invalid email or password ")
+        if (!findedUser ) {
+            res.status(400).send("invalid email  ")
+        } 
+        if (!validPassword) {
+            res.status(400).send("invalid  password ")
         } 
          delete findedUser.password 
         const token =jwt.sign(findedUser, process.env.TOKEN);
@@ -70,10 +73,12 @@ router.post('/login', async (req, res) => {
             }
         })
        return res.status(200).header("access-token",token).send({ token: token})
+    
 
     } catch(error) {
-        res.status(400).send({error: error.message})
+        res.status(400).end()
      }
+    
 })
 
 router.delete("/logout",auth, async (req, res) => {
