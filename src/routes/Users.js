@@ -57,15 +57,16 @@ router.post('/login', async (req, res) => {
         const findedUser = await users.findFirst({
             where: { Email: Email }
         })
-        if(!(Email&&Password)) {
-            return res.status(400).send({msg: "Please fill information"})
+          if(!(Email&&Password)) {
+        return res.status(401).send({msg: "Please fill information"})
         }
-        const validPassword =await bcrypt.compare(Password,findedUser.Password)
         if (!findedUser ) {
-          return  res.status(401).send({msg:"invalid email !"})
-        } 
+            return res.status(401).send({msg:"invalid email !"})
+          } 
+        console.log(findedUser)
+        const validPassword =await bcrypt.compare(Password,findedUser.Password)
         if (!validPassword) {
-           return res.status(401).send({msg:"invalid  password ! "})
+           return res.status(401).send({msg:"invalid password ! "})
         } 
          delete findedUser.password 
         const token =jwt.sign(findedUser, process.env.TOKEN);
@@ -79,7 +80,7 @@ router.post('/login', async (req, res) => {
     
 
     } catch(error) {
-        res.status(400).end()
+        res.status(400).end("error")
      }
     
 })
