@@ -100,7 +100,7 @@ try{
 }
 })
 
-router.put('/edituser/:id', async (req, res) => {
+router.put('/edituser/',auth, async (req, res) => {
     let id = Number(req.params.id)
     const result = await users.update({
         data: req.body,
@@ -114,7 +114,7 @@ router.put('/edituser/:id', async (req, res) => {
 
 
 
-router.delete("/deleteuser/:id", async (req, res) => {
+router.delete("/deleteuser/",auth, async (req, res) => {
     const id = Number(req.params.id)
      await users.deleteMany ({
         where: { UserID: id }

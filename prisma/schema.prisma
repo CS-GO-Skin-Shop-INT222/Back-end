@@ -15,6 +15,7 @@ model users {
   Tel        String       @db.VarChar(45)
   Password   String       @db.VarChar(256)
   Credit     Int?
+  ImageUser  String?      @db.VarChar(100)
   inventory  inventory[]
   userTokens userTokens[]
 }
@@ -78,4 +79,21 @@ model userTokens {
   users    users  @relation(fields: [UserID], references: [UserID], onDelete: Cascade)
 
   @@index([UserID], name: "fk_userTokens_Users1_idx")
+}
+
+model Admin {
+  AdminID     Int           @id @unique
+  AdminName   String        @unique @db.VarChar(45)
+  Password    String        @db.VarChar(256)
+  Email       String        @unique @db.VarChar(45)
+  AdminTokens AdminTokens[]
+}
+
+model AdminTokens {
+  TokensID Int    @id @default(autoincrement())
+  Token    String @db.VarChar(500)
+  AdminID  Int
+  Admin    Admin  @relation(fields: [AdminID], references: [AdminID], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([AdminID], name: "fk_AdminTokens_Admin1_idx")
 }

@@ -18,13 +18,16 @@ const inventory = require('./routes/Inventory')
 const marketitem = require('./routes/MarketItem')
 const user = require('./routes/Users')
 const sticker = require('./routes/Sticker')
-
+const admin = require('./routes/Admin')
+const ImageUser = require('./routes/ImageUser')
 /// route middlewares
 // app.use('/api/user', authRoute);
+app.use('/api/admins',admin)
 app.use('/api/inventory', inventory)
 app.use('/api/marketitem' , marketitem)
 app.use('/api/user' ,user)
 app.use('/api/stickeritem', sticker)
+app.use('/api/ImageUsers', ImageUser)
 
 app.listen(port, () => {
     console.log(`server running on port ${port}`)
