@@ -31,13 +31,17 @@ router.post('/register', async (req, res) => {
     if (!(Name && Email && Tel && Password && Credit)) {
         return res.status(400).send("input your info")
     }
-    const oldUser = await users.findFirst({
-        where: { Name : Name ,Email: Email  }
+    const oldUserName = await users.findFirst({
+        where: { Name : Name  }
     })
-    if (oldUser) {
-        return res.status(409).send("User is already exist")
+    const oldUserEmail = await users.findFirst({
+        where: {Email: Email  }
+    })
+    if (oldUserName || oldUserEmail) {     
+        
+        return res.status(409).send({msg:"User is already exist"})
     }
-    encryptedPassword = await bcrypt.hash(Password, 10);
+    let encryptedPassword = await bcrypt.hash(Password, 10);
     const hashPassword = await bcrypt.hash(Password, encryptedPassword)
     await users.create({
         data: {
