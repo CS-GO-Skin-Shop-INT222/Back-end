@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require ('path')
 const { PrismaClient } = require('@prisma/client')
 const users = new PrismaClient().users
-const auth = require('../middleware/auth')
+const {verifyTokenUser} = require('../middleware/auth')
 
 
 const storage = multer.diskStorage({
@@ -34,17 +34,16 @@ const upload = multer({
         checkFileType(file,cb)
     }
 })
-router.get('/getImage' ,auth , async (req, res)=>{
+router.get('/getImage' ,verifyTokenUser , async (req, res)=>{
     const ImageFile = './public/upload'
     const {ImageUser}= req.body
     if(ImageFile == ImageUser){
         return res.status(200).send(ImageFile)
     }
-    console.log(ImageFile)
    return res.status(200).send({user:req.user})
 })
 
-router.post('/uploadImage',auth, upload.single('avatar') , async (req, res)=>{
+router.post('/uploadImage',verifyTokenUser, upload.single('avatar') , async (req, res)=>{
     const file = req.file
     console.log(req.user)
     const result = await users.update({

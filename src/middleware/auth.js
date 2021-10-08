@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client')
 const users = new PrismaClient().users
+const Admin = new PrismaClient().admin
 
-const verifyToken = async(req, res, next) => {
+const verifyTokenUser = async(req, res, next) => {
     try{
     const token = req.body.token ||  req.header('Authorization').replace('Bearer ','');
     if(!token ){
@@ -17,7 +18,21 @@ const verifyToken = async(req, res, next) => {
     }catch(error){
         return res.status(401).send("invalid token")
     }
-
-    
 }
-module.exports = verifyToken;
+const verifyTokenAdmin = async(req, res, next) => {
+    try{
+    const token = req.body.token ||  req.header('Authorization').replace('Bearer ','');
+    if(!token ){
+        return res.status(403).send("A token is require for authentication")
+    }
+        const decoded = jwt.verify(token, process.env.TOKEN);
+        const admin = await Admin.findFirst({
+            where:{AdminID:decoded.AdminID}
+        })
+        req.admin = admin;
+        next();
+    }catch(error){
+        return res.status(401).send("invalid token")
+    }
+}
+module.exports = {verifyTokenUser , verifyTokenAdmin};

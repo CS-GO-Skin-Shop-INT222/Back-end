@@ -13,7 +13,7 @@ app.use(cors({
 }))
 
 ///import routes
-const authRoute = require('./middleware/auth');
+// const authRoute = require('./middleware/auth');
 const inventory = require('./routes/Inventory')
 const marketitem = require('./routes/MarketItem')
 const user = require('./routes/Users')

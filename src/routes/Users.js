@@ -5,7 +5,7 @@ const { userTokens } = new PrismaClient()
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const users = new PrismaClient().users
-const auth = require('../middleware/auth')
+const {verifyTokenUser} = require('../middleware/auth')
 
 
 router.get('/users', async (req, res) => {
@@ -13,7 +13,7 @@ router.get('/users', async (req, res) => {
     return res.status(200).send(result)
 })
 
-router.get('/profile',auth, async (req, res) =>{
+router.get('/profile',verifyTokenUser, async (req, res) =>{
     res.status(200).send({user:req.user})
 })
 
@@ -89,7 +89,7 @@ router.post('/login', async (req, res) => {
     
 })
 
-router.delete("/logout",auth, async (req, res) => {
+router.delete("/logout",verifyTokenUser, async (req, res) => {
 try{
     await userTokens.deleteMany({
         where:{token:req.Token}
@@ -100,7 +100,7 @@ try{
 }
 })
 
-router.put('/edituser/',auth, async (req, res) => {
+router.put('/edituser/',verifyTokenUser, async (req, res) => {
     let id = Number(req.params.id)
     const result = await users.update({
         data: req.body,
@@ -114,7 +114,7 @@ router.put('/edituser/',auth, async (req, res) => {
 
 
 
-router.delete("/deleteuser/",auth, async (req, res) => {
+router.delete("/deleteuser/",verifyTokenUser, async (req, res) => {
     const id = Number(req.params.id)
      await users.deleteMany ({
         where: { UserID: id }
