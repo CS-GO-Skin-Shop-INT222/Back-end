@@ -2,6 +2,9 @@ const router = require("express").Router()
 const { PrismaClient } = require("@prisma/client")
 const { inventory } = new PrismaClient()
 const { inventory_sticker } = new PrismaClient()
+const { Skin } = new PrismaClient()
+const { Weapon } = new PrismaClient()
+const {TypeOfWeapon} = new PrismaClient()
 const dayjs = require("dayjs")
 let lastUpdate = dayjs(Date.now()).format()
 
@@ -9,7 +12,7 @@ let lastUpdate = dayjs(Date.now()).format()
 router.get('/allItem', async (req, res) => {
   const result = await inventory.findMany({
     include: {
-      users: { select: { Name: true, Email: true } },
+      Users: { select: { Name: true, Email: true } },
       typeofitem: { select: { TypeName: true } },
       inventory_sticker: { include: { sticker: { select: { StickerName: true } } } }
     }

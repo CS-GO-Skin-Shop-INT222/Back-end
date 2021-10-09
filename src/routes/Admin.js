@@ -25,14 +25,12 @@ router.post('/login',verifyTokenAdmin, async (req, res) => {
         if (!findedAmin ) {
             return res.status(401).send({msg:"invalid email !"})
           } 
-        console.log(findedAmin)
         const validPassword =await bcrypt.compare(Password,findedAmin.Password)
         if (!validPassword) {
            return res.status(401).send({msg:"invalid password ! "})
         } 
          delete findedAmin.password 
         const token =jwt.sign(findedAmin, process.env.TOKEN);
-        console.log(token)
         await adminTokens.create({
             data:{
                 Token: token,
