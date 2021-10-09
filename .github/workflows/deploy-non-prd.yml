@@ -48,26 +48,7 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/cs-go-skin-shop-int222/back-end:${{ env.ENV_NAME }}
-          
-      - name: Anchore Container Scan
-        uses: anchore/scan-action@v3.0.0
-        id: scan
-        with:
-          image: "ghcr.io/cs-go-skin-shop-int222/back-end:${{ env.ENV_NAME }}"
-          fail-build: false
-          acs-report-enable: true
-          
-      - name: upload Anchore scan SARIF report
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: ${{ steps.scan.outputs.sarif }}
-          
-      - name: OWASP ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.4.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'https://api.blackcarrack.tech/'
-          
+
   deploy:
     needs: build
     runs-on: ubuntu-20.04
@@ -87,3 +68,32 @@ jobs:
             docker pull ghcr.io/cs-go-skin-shop-int222/back-end:${{ env.ENV_NAME }}
             docker-compose -f ~/docker-compose/app-compose.yml down
             docker-compose -f ~/docker-compose/app-compose.yml up -d
+
+  test:
+    needs: deploy
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Set env
+        run: echo "ENV_NAME=$( [ "$GITHUB_REF" == "refs/heads/main" ] && echo 'uat' || echo ${GITHUB_REF##*/} )" >> $GITHUB_ENV
+
+      - name: Anchore Container Scan
+        uses: anchore/scan-action@v3.0.0
+        id: scan
+        with:
+          image: "ghcr.io/cs-go-skin-shop-int222/back-end:${{ env.ENV_NAME }}"
+          fail-build: false
+          acs-report-enable: true
+
+      - name: upload Anchore scan SARIF report
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: ${{ steps.scan.outputs.sarif }}
+
+      # - name: OWASP ZAP Baseline Scan
+      #   uses: zaproxy/action-baseline@v0.4.0
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     target: 'https://api.blackcarrack.tech/'
