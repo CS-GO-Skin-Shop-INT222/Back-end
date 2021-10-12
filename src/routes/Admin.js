@@ -1,22 +1,21 @@
 const router = require('express').Router();
 require("dotenv").config();
-const { PrismaClient } = require('@prisma/client')
-const { adminTokens } = new PrismaClient()
+const { adminTokens } = require('../models/model')
+const { admin } = require('../models/model')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const admins = new PrismaClient().admin
 const {verifyTokenAdmin} = require('../middleware/auth')
 
 
 router.get('/admin', async (req, res) => {
-    const result = await admins.findMany()
+    const result = await admin.findMany()
     return res.status(200).send({data:result})
 })
 
 router.post('/login',verifyTokenAdmin, async (req, res) => {
     try {
         const { Email, Password } = req.body;
-        const findedAmin = await admins.findFirst({
+        const findedAmin = await admin.findFirst({
             where: { Email: Email }
         })
           if(!(Email&&Password)) {

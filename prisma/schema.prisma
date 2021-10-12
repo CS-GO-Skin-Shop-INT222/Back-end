@@ -25,49 +25,16 @@ model AdminTokens {
   @@index([AdminID], name: "fk_AdminTokens_Admin1_idx")
 }
 
-model Inventory {
-  ItemID            Int                 @unique @default(autoincrement())
-  Name_item         String              @db.VarChar(45)
-  Price             Int
-  Description       String              @db.VarChar(256)
-  Date              DateTime            @db.Timestamp(0)
-  UserID            Int
-  SkinID            String              @db.VarChar(20)
-  Skin              Skin                @relation(fields: [SkinID], references: [SkinID], onDelete: NoAction, onUpdate: NoAction)
-  Users             Users               @relation(fields: [UserID], references: [UserID], onDelete: Cascade, onUpdate: Cascade)
-  Inventory_Sticker Inventory_Sticker[]
-
-  @@id([ItemID, UserID, SkinID])
-  @@index([SkinID], name: "fk_Inventory_Skin1_idx")
-  @@index([UserID], name: "fk_MarketItem_Users_idx")
-}
-
-model Inventory_Sticker {
-  ItemID    Int
-  StickerID String    @db.VarChar(20)
-  Inventory Inventory @relation(fields: [ItemID], references: [ItemID], onDelete: Cascade, onUpdate: Cascade)
-  Sticker   Sticker   @relation(fields: [StickerID], references: [StickerID], onDelete: NoAction, onUpdate: NoAction)
-
-  @@id([ItemID, StickerID])
-  @@index([ItemID], name: "fk_MarketItem_has_Sticker_MarketItem1_idx")
-  @@index([StickerID], name: "fk_MarketItem_has_Sticker_Sticker1_idx")
-}
-
 model Skin {
-  SkinID    String      @unique @db.VarChar(20)
-  SkinName  String      @unique @db.VarChar(45)
-  WeaponID  String      @db.VarChar(20)
-  Weapon    Weapon      @relation(fields: [WeaponID], references: [WeaponID], onDelete: NoAction, onUpdate: NoAction)
-  Inventory Inventory[]
-
-  @@id([SkinID, WeaponID])
-  @@index([WeaponID], name: "fk_Skin_Weapon1_idx")
+  SkinID     String       @id @unique @db.VarChar(20)
+  SkinName   String       @db.VarChar(45)
+  WeaponSkin WeaponSkin[]
 }
 
 model Sticker {
-  StickerID         String              @id @unique @db.VarChar(20)
-  StickerName       String              @unique @db.VarChar(100)
-  Inventory_Sticker Inventory_Sticker[]
+  StickerID    String         @id @unique @db.VarChar(20)
+  StickerName  String         @unique @db.VarChar(100)
+  Item_Sticker Item_Sticker[]
 }
 
 model TypeOfWeapon {
@@ -93,17 +60,56 @@ model Users {
   Password   String       @db.VarChar(256)
   Credit     Int?
   ImageUser  String?      @db.VarChar(100)
-  Inventory  Inventory[]
+  Item       Item[]
   UserTokens UserTokens[]
 }
 
 model Weapon {
-  WeaponID     String       @unique @db.VarChar(20)
+  WeaponID     String       @id @unique @db.VarChar(20)
   WeaponName   String       @unique @db.VarChar(45)
   TypeID       String       @db.VarChar(20)
   TypeOfWeapon TypeOfWeapon @relation(fields: [TypeID], references: [TypeID], onDelete: NoAction, onUpdate: NoAction)
-  Skin         Skin[]
+  WeaponSkin   WeaponSkin[]
 
-  @@id([WeaponID, TypeID])
-  @@index([TypeID], name: "fk_Weapon_TypeOfItem1_idx")
+  @@index([TypeID], name: "fk_Weapon_TypeOfWeapon1_idx")
+}
+
+model Item {
+  ItemID       Int            @unique @default(autoincrement())
+  Price        Int
+  Description  String         @db.VarChar(256)
+  Date         DateTime       @db.Timestamp(0)
+  WeaponSkinID String         @db.VarChar(45)
+  UserID       Int
+  Publish      String         @db.Char(1)
+  Users        Users          @relation(fields: [UserID], references: [UserID], onDelete: Cascade, onUpdate: Cascade)
+  WeaponSkin   WeaponSkin     @relation(fields: [WeaponSkinID], references: [WeaponSkinID], onDelete: NoAction, onUpdate: NoAction)
+  Item_Sticker Item_Sticker[]
+
+  @@id([ItemID, WeaponSkinID])
+  @@index([UserID], name: "fk_Item_Users1_idx")
+  @@index([WeaponSkinID], name: "fk_Item_WeaponSkin1_idx")
+}
+
+model Item_Sticker {
+  ItemID    Int
+  StickerID String  @db.VarChar(20)
+  Item      Item    @relation(fields: [ItemID], references: [ItemID], onDelete: Cascade, onUpdate: NoAction)
+  Sticker   Sticker @relation(fields: [StickerID], references: [StickerID], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([ItemID, StickerID])
+  @@index([ItemID], name: "fk_MarketItem_has_Sticker_MarketItem1_idx")
+  @@index([StickerID], name: "fk_MarketItem_has_Sticker_Sticker1_idx")
+}
+
+model WeaponSkin {
+  WeaponSkinID String @id @db.VarChar(45)
+  SkinID       String @db.VarChar(20)
+  WeaponID     String @db.VarChar(20)
+  Skin         Skin   @relation(fields: [SkinID], references: [SkinID], onDelete: NoAction, onUpdate: NoAction)
+  Weapon       Weapon @relation(fields: [WeaponID], references: [WeaponID], onDelete: NoAction, onUpdate: NoAction)
+  Item         Item[]
+
+  @@index([SkinID], name: "fk_WeaponSkin_Skin1")
+  @@index([WeaponID], name: "fk_WeaponSkin_Weapon1_idx")
 }

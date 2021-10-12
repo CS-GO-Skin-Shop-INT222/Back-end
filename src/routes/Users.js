@@ -1,15 +1,14 @@
 const router = require('express').Router();
 require("dotenv").config();
-const { PrismaClient } = require('@prisma/client')
-const { userTokens } = new PrismaClient()
+const { userTokens } = require('../models/model')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const users = new PrismaClient().users
+const {users} = require('../models/model')
 const {verifyTokenUser} = require('../middleware/auth')
 
 
 router.get('/users', async (req, res) => {
-    const result = await users.findMany()
+    const result = await Users.findMany()
     return res.status(200).send(result)
 })
 
@@ -39,7 +38,7 @@ router.post('/register', async (req, res) => {
     })
     if (oldUserName || oldUserEmail) {     
         
-        return res.status(409).send({msg:"User is already exist"})
+        return res.status(401).send({msg:"User is already exist"})
     }
     let encryptedPassword = await bcrypt.hash(Password, 10);
     const hashPassword = await bcrypt.hash(Password, encryptedPassword)
