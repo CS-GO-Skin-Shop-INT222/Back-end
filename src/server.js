@@ -20,6 +20,7 @@ const user = require('./routes/Users')
 const sticker = require('./routes/Sticker')
 const admin = require('./routes/Admin')
 const ImageUser = require('./routes/ImageUser')
+const health = require('./routes/BeHealthy')
 /// route middlewares
 // app.use('/api/user', authRoute);
 app.use('/api/admins',admin)
@@ -27,7 +28,8 @@ app.use('/api/inventory', inventory)
 app.use('/api/marketitem' , marketitem)
 app.use('/api/user' ,user)
 app.use('/api/stickeritem', sticker)
-app.use('/api/ImageUsers', ImageUser)
+app.use('/api/imageusers', ImageUser)
+app.use('/api',health)
 
 app.listen(port, () => {
     console.log(`server running on port ${port}`)
