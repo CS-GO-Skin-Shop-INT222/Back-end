@@ -9,12 +9,12 @@ router.get('/skin', async (req, res) => {
 })
 router.get('/type', async (req, res) => {
     const result = await typeOfWeapon.findMany()
-    return res.status(200).send({msg:'all tpye ', Type :result})
+    return res.send({msg:'all type ', Type :result})
 })
 
 router.get('/weapon', async (req, res) => {
     const result = await weapon.findMany()
-    return res.status(200).send({msg:'all weapon ', Weapon :result})
+    return res.send({msg:'all weapon ', Weapon :result})
 })
 
 
