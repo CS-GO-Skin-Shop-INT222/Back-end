@@ -5,16 +5,16 @@ const { weapon } = require('../models/model')
 
 router.get('/skin', async (req, res) => {
     const result = await skin.findMany()
-    return res.send({msg:'all skin ', Skin :result})
+    return res.status(200).send({msg:'all skin ', Skin :result})
 })
 router.get('/type', async (req, res) => {
     const result = await typeOfWeapon.findMany()
-    return res.send({msg:'all tpye ', Type :result})
+    return res.status(200).send({msg:'all tpye ', Type :result})
 })
 
 router.get('/weapon', async (req, res) => {
     const result = await weapon.findMany()
-    return res.send({msg:'all weapon ', Weapon :result})
+    return res.status(200).send({msg:'all weapon ', Weapon :result})
 })
 
 

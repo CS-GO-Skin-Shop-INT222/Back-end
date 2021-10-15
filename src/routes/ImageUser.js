@@ -47,7 +47,7 @@ router.post('/uploadImage', verifyTokenUser, upload.single('avatar'), async (req
         where: { UserID: req.user.UserID }
     })
     if (result.count == 0) {
-        return res.status(400).send("Don't have image")
+        return res.status(401).send("Don't have image")
     }
     return res.status(200).send({ msg: "uploadImage successfully! " })
 })

@@ -40,7 +40,7 @@ router.post('/login',verifyTokenAdmin, async (req, res) => {
     
 
     } catch(error) {
-        res.status(400).end("error")
+        res.status(401).end("error")
      }
     
 })
@@ -51,7 +51,7 @@ router.delete("/logout",verifyTokenAdmin, async (req, res) => {
         })
         res.status(200).send("logout finished")
     }catch(error){
-        res.status(400).send({error:error.message})
+        res.status(401).send({error:error.message})
     }
     })
 module.exports = router;

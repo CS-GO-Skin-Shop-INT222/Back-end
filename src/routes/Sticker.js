@@ -5,14 +5,25 @@ const { item_Sticker } = new PrismaClient()
 
 
 router.get('/sticker', async (req, res) => {
-    const result = await item_Sticker.findMany()
-    return res.send(result)
+  const result = await item_Sticker.findMany()
+  return res.status(200).send(result)
 })
 router.post('/addsticker', async (req, res) => {
+  const { ItemID, StickerID } = req.body
   const result = await item_Sticker.createMany({
-  data: req.body,
-})
-return res.send(result)
+    data: {
+      ItemID: ItemID,
+      StickerID: StickerID,
+    }
+  })
+  const oldsticker = await item_Sticker.findFirst({
+    where: { StickerID: StickerID }
+  })
+  if (oldsticker) {
+    return res.status(401).send({ msg: "Sticker is already exist" })
+  }
+
+  return res.status(200).send(result)
 })
 
 module.exports = router
