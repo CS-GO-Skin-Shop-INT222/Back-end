@@ -13,7 +13,7 @@ router.get('/users', async (req, res) => {
 })
 
 router.get('/profile', verifyTokenUser, async (req, res) => {
-    res.status(200).send({ users: req.urers })
+    res.status(200).send({ user: req.user })
 })
 
 router.get('/user/:id', async (req, res) => {
