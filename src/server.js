@@ -12,6 +12,10 @@ app.use(cors({
     methods:['GET', 'POST', 'PUT', 'DELETE' , 'HEAD' , 'OPTIONS'],
 }))
 
+app.get('/',(req, res)=>{
+    res.status(200).send({msg: "welcome!"})
+})
+
 ///import routes
 // const authRoute = require('./middleware/auth');
 const inventory = require('./routes/Inventory')
@@ -32,7 +36,7 @@ app.use('/api/user' ,user)
 app.use('/api/stickeritem', sticker)
 app.use('/api/imageusers', ImageUser)
 app.use('/api',health)
-
+ 
 app.listen(port, () => {
     console.log(`server running on port ${port}`)
 })
