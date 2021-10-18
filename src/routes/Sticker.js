@@ -1,11 +1,12 @@
 const router = require("express").Router()
 const { PrismaClient } = require("@prisma/client")
-const { item_Sticker } = new PrismaClient()
+const { item_Sticker } = require('../models/model')
+const { sticker } = require('../models/model') 
 
 
 
 router.get('/sticker', async (req, res) => {
-  const result = await item_Sticker.findMany()
+  const result = await sticker.findMany()
   return res.status(200).send(result)
 })
 router.post('/addsticker', async (req, res) => {

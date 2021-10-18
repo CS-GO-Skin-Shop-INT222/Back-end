@@ -54,4 +54,5 @@ router.delete("/logout",verifyTokenAdmin, async (req, res) => {
         res.status(401).send({error:error.message})
     }
     })
+    
 module.exports = router;
