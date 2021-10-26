@@ -81,7 +81,7 @@ model Item {
   Date         DateTime       @db.Timestamp(0)
   WeaponSkinID String         @db.VarChar(45)
   UserID       Int
-  Publish      String         @db.Char(1)
+  Publish      Boolean        @default(false)
   Users        Users          @relation(fields: [UserID], references: [UserID], onDelete: Cascade, onUpdate: Cascade)
   WeaponSkin   WeaponSkin     @relation(fields: [WeaponSkinID], references: [WeaponSkinID], onDelete: NoAction, onUpdate: NoAction)
   Item_Sticker Item_Sticker[]
