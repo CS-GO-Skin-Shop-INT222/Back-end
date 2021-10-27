@@ -54,8 +54,8 @@ router.get('/getitem/:id', async (req, res) => {
 })
 
 router.post('/addItem', async (req, res) => {
-  let { Price, Description, UserID, WeaponSkinID , Stickers ,Publish} = req.body
-  if (!( Price && Description && WeaponSkinID && UserID && Publish)) {
+  let { Price, Description, UserID, WeaponSkinID , Stickers } = req.body
+  if (!( Price && Description && WeaponSkinID && UserID )) {
     return res.status(401).send({msg:"Please input item information!"})
   }
   let result = await item.create({
@@ -65,7 +65,6 @@ router.post('/addItem', async (req, res) => {
       Date: lastUpdate,
       WeaponSkinID:WeaponSkinID,
       UserID: UserID,
-      Publish: Publish
     }
   })
   console.log(result)
@@ -91,6 +90,20 @@ router.put('/editItem/:id', async (req, res) => {
   }
   return res.send(result)
 })
+
+router.put('/changepublish/:id', async (req, res) => {
+  let id = Number(req.params.id)
+  const result = await item.update({
+    where: { ItemID: id },
+    data: {Publish : true}
+  })
+  if (result.count == 0) {
+    return res.status(401).send({msg:"Don't have item"})
+  }
+  return res.send({msg:"this item is selling!"})
+})
+
+
 router.delete("/deleteItem/:id", async (req, res) => {
   const id = Number(req.params.id)
   const result = await item.deleteMany({
