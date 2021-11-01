@@ -2,6 +2,7 @@ const router = require('express').Router();
 require("dotenv").config();
 const { adminTokens } = require('../models/model')
 const { admin } = require('../models/model')
+const { users } = require('../models/model')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const {verifyTokenAdmin} = require('../middleware/auth')
@@ -54,5 +55,21 @@ router.delete("/logout",verifyTokenAdmin, async (req, res) => {
         res.status(401).send({error:error.message})
     }
     })
-    
+
+router.put("/addcredit/:id",verifyTokenAdmin, async (req, res) => {
+    let id = Number(req.params.id)
+    let{ Credit  }=req.body
+    const result = await users.update({
+        data: { 
+            Credit: Credit
+        },
+        where: { UserID: id }
+    })
+    if (result.count == 0) {
+        return res.status(401).send("don't have user ")
+    }
+    return res.status(200).send(result)
+})
+
+
 module.exports = router;

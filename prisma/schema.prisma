@@ -106,6 +106,7 @@ model WeaponSkin {
   WeaponSkinID String @id @db.VarChar(45)
   SkinID       String @db.VarChar(20)
   WeaponID     String @db.VarChar(20)
+  imageURL     String @db.VarChar(500)
   Skin         Skin   @relation(fields: [SkinID], references: [SkinID], onDelete: NoAction, onUpdate: NoAction)
   Weapon       Weapon @relation(fields: [WeaponID], references: [WeaponID], onDelete: NoAction, onUpdate: NoAction)
   Item         Item[]

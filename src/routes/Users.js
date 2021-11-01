@@ -101,12 +101,11 @@ router.delete("/logout", verifyTokenUser, async (req, res) => {
 
 router.put('/edituser/:id',verifyTokenUser, async (req, res) => {
     let id = Number(req.params.id)
-    let{Name ,Email , Tel ,Password  }=req.body
+    let{Name , Tel ,Password  }=req.body
     let encryptedPassword = await bcrypt.hash(Password, 10);
     const result = await users.update({
         data: { 
             Name: Name,
-            Email : Email,
             Password: encryptedPassword,
             Tel : Tel
         },
