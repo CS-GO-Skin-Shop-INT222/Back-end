@@ -19,7 +19,7 @@ app.get('/',(req, res)=>{
 ///import routes
 // const authRoute = require('./middleware/auth');
 const inventory = require('./routes/Inventory')
-// const marketitem = require('./routes/MarketItem')
+const marketitem = require('./routes/MarketItem')
 const user = require('./routes/Users')
 const sticker = require('./routes/Sticker')
 const admin = require('./routes/Admin')
@@ -31,7 +31,7 @@ const item =require('./routes/Item')
 app.use('/api/admins',admin)
 app.use('/api/inventory', inventory)
 app.use('/api/item', item)
-// app.use('/api/marketitem' , marketitem)
+app.use('/api/marketitem' , marketitem)
 app.use('/api/user' ,user)
 app.use('/api/stickeritem', sticker)
 app.use('/api/imageusers', ImageUser)
