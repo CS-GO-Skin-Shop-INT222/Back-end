@@ -91,7 +91,7 @@ router.put('/editItem/:id', async (req, res) => {
   return res.send(result)
 })
 
-router.put('/changepublish/:id', async (req, res) => {
+router.put('/sellItem/:id', async (req, res) => {
   let id = Number(req.params.id)
   const result = await item.update({
     where: { ItemID: id },
