@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const { skin } = require('../models/model')
+const { skin, item } = require('../models/model')
 const { typeOfWeapon } = require('../models/model')
 const { weapon } = require('../models/model')
 const { weaponSkin } = require('../models/model')
@@ -13,10 +13,10 @@ router.get('/showweapon/:id', async (req, res) => {
         }
 
     })
-    return res.status(200).send({ Weapon : result })
+    return res.status(200).send({ Weapon: result })
 })
 
-router.get('/showskin/:id', async (req, res) =>{
+router.get('/showskin/:id', async (req, res) => {
     const id = req.params.id
     const result = await weaponSkin.findMany({
         where: { SkinID: id },
@@ -24,7 +24,7 @@ router.get('/showskin/:id', async (req, res) =>{
             Weapon: { select: { WeaponName: true } }
         }
     })
-    return res.status(200).send({ Weapon : result })
+    return res.status(200).send({ Weapon: result })
 })
 
 router.get('/weapon/:id', async (req, res) => {
@@ -38,6 +38,22 @@ router.get('/weapon/:id', async (req, res) => {
 router.get('/allweaponskin', async (req, res) => {
     const result = await weaponSkin.findMany()
     return res.status(200).send({ msg: 'all skin ', Skin: result })
+})
+
+router.get('/filterType/:id', async (req, res) => {
+    const id = req.params.id
+    const result = await item.findMany({
+        where:{WeaponSkin:{Weapon:{TypeID : id }},  Publish : true}
+    })
+    return res.send({ Weapon: result })
+})
+
+router.get('/filterWeapon/:id',async (req, res)=>{
+    const id = req.params.id
+    const result = await item.findMany({
+        where:{WeaponSkin:{Weapon:{WeaponID : id }},  Publish : true}
+    })
+    return res.send({ Weapon: result })
 })
 
 
