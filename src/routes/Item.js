@@ -53,7 +53,6 @@ router.get('/filterType/:id/:page', async (req, res) => {
     const result = await item.findMany({
         skip: calSkip(page , numberOfItem),
         take: numberOfItem,
-        where:{Publish : true},
         where:{WeaponSkin:{Weapon:{TypeID : id }},  Publish : true}
     })
     const totalItem = await item.count()
@@ -73,7 +72,6 @@ router.get('/filterWeapon/:id/:page',async (req, res)=>{
     const result = await item.findMany({
         skip: calSkip(page , numberOfItem),
         take: numberOfItem,
-        where:{Publish : true},
         where:{WeaponSkin:{Weapon:{WeaponID : id }},  Publish : true}
     })
     const totalItem = await item.count()
