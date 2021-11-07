@@ -40,20 +40,44 @@ router.get('/allweaponskin', async (req, res) => {
     return res.status(200).send({ msg: 'all skin ', Skin: result })
 })
 
-router.get('/filterType/:id', async (req, res) => {
+router.get('/filterType/:id/:page', async (req, res) => {
     const id = req.params.id
+    const calSkip = (page , numberOfItem ) => {
+        return (page - 1) * numberOfItem
+      }  
+      const CalPage = (item, numberOfItem ) => {
+        return Math.ceil(item / numberOfItem)
+      }
+      let page = Number(req.params.page)
+      let numberOfItem = 9    
     const result = await item.findMany({
+        skip: calSkip(page , numberOfItem),
+        take: numberOfItem,
+        where:{Publish : true},
         where:{WeaponSkin:{Weapon:{TypeID : id }},  Publish : true}
     })
-    return res.send({ Weapon: result })
+    const totalItem = await item.count()
+    return res.status(200).send({data:result,page:page, totalpage:CalPage(totalItem, numberOfItem)})
 })
 
-router.get('/filterWeapon/:id',async (req, res)=>{
+router.get('/filterWeapon/:id/:page',async (req, res)=>{
     const id = req.params.id
+    const calSkip = (page , numberOfItem ) => {
+        return (page - 1) * numberOfItem
+      }  
+      const CalPage = (item, numberOfItem ) => {
+        return Math.ceil(item / numberOfItem)
+      }
+      let page = Number(req.params.page)
+      let numberOfItem = 9    
     const result = await item.findMany({
+        skip: calSkip(page , numberOfItem),
+        take: numberOfItem,
+        where:{Publish : true},
         where:{WeaponSkin:{Weapon:{WeaponID : id }},  Publish : true}
     })
-    return res.send({ Weapon: result })
+    const totalItem = await item.count()
+    return res.status(200).send({data:result,page:page, totalpage:CalPage(totalItem, numberOfItem)})
 })
 
 
@@ -64,10 +88,10 @@ router.get('/allskin', async (req, res) => {
 })
 router.get('/alltype', async (req, res) => {
     const result = await typeOfWeapon.findMany()
-    return res.send({ msg: 'all type ', Type: result })
+    return res.status(200).send({ msg: 'all type ', Type: result })
 })
 router.get('/allweapon', async (req, res) => {
     const result = await weapon.findMany()
-    return res.send({ msg: 'all weapon ', Weapon: result })
+    return res.status(200).send({ msg: 'all weapon ', Weapon: result })
 })
 module.exports = router;

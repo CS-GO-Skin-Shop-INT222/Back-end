@@ -25,7 +25,7 @@ router.get('/allmarket/:page', async (req, res) => {
     }
     })
     const totalItem = await item.count()
-    return res.send({data:result,page:page, totalpage:CalPage(totalItem, numberOfItem)})
+    return res.status(200).send({data:result,page:page, totalpage:CalPage(totalItem, numberOfItem)})
 })
 
 router.get('/getitem/:id', async (req, res) => {
