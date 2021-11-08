@@ -1,8 +1,9 @@
 const router = require('express').Router();
 const multer = require('multer');
 const path = require('path');
-const users = require('../models/model')
-const { verifyTokenUser } = require('../middleware/auth')
+const { users } = require('../models/model')
+const { verifyTokenUser } = require('../middleware/auth');
+
 
 
 const storage = multer.diskStorage({

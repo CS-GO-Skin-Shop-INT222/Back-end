@@ -5,62 +5,66 @@ const { admin } = require('../models/model')
 const { users } = require('../models/model')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const {verifyTokenAdmin} = require('../middleware/auth')
+const { verifyTokenAdmin } = require('../middleware/auth')
 
 
-router.get('/admin', async (req, res) => {
+router.get('/admin', verifyTokenAdmin, async (req, res) => {
     const result = await admin.findMany()
-    return res.status(200).send({data:result})
+    return res.status(200).send({ data: result })
 })
 
-router.post('/login',verifyTokenAdmin, async (req, res) => {
+router.post('/login', verifyTokenAdmin, async (req, res) => {
     try {
         const { Email, Password } = req.body;
         const findedAmin = await admin.findFirst({
             where: { Email: Email }
         })
-          if(!(Email&&Password)) {
-        return res.status(401).send({msg: "Please fill information"})
+        if (!(Email && Password)) {
+            return res.status(401).send({ msg: "Please fill information" })
         }
-        if (!findedAmin ) {
-            return res.status(401).send({msg:"invalid email !"})
-          } 
-        const validPassword =await bcrypt.compare(Password,findedAmin.Password)
+        if (!findedAmin) {
+            return res.status(401).send({ msg: "invalid email !" })
+        }
+        const validPassword = await bcrypt.compare(Password, findedAmin.Password)
         if (!validPassword) {
-           return res.status(401).send({msg:"invalid password ! "})
-        } 
-         delete findedAmin.password 
-        const token =jwt.sign(findedAmin, process.env.TOKEN);
+            return res.status(401).send({ msg: "invalid password ! " })
+        }
+        delete findedAmin.password
+        const token = jwt.sign(findedAmin, process.env.TOKEN);
         await adminTokens.create({
-            data:{
+            data: {
                 Token: token,
                 AdminID: findedAmin.AdminID
             }
         })
-       return res.status(200).header("access-token",token).send({ token: token})
-    
+        return res.status(200).header("access-token", token).send({ token: token })
 
-    } catch(error) {
+
+    } catch (error) {
         res.status(401).end("error")
-     }
-    
+    }
+
 })
-router.delete("/logout",verifyTokenAdmin, async (req, res) => {
-    try{
+router.delete("/logout", verifyTokenAdmin, async (req, res) => {
+    try {
         await adminTokens.deleteMany({
-            where:{token:req.Token}
+            where: { token: req.Token }
         })
         res.status(200).send("logout finished")
-    }catch(error){
-        res.status(401).send({error:error.message})
+    } catch (error) {
+        res.status(401).send({ error: error.message })
     }
-    })
+})
+router.get('/users', verifyTokenAdmin, async (req, res) => {
+    const result = await users.findMany()
+    return res.status(200).send(result)
+})
 
-router.put("/addcredit/:id",verifyTokenAdmin, async (req, res) => {
+router.put("/addcredit/:id", verifyTokenAdmin, async (req, res) => {
     let id = Number(req.params.id)
-    let{ Credit  }=req.body
+    let { Credit } = req.body
     const result = await users.update({
-        data: { 
+        data: {
             Credit: Credit
         },
         where: { UserID: id }

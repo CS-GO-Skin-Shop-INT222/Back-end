@@ -7,10 +7,7 @@ const { users } = require('../models/model')
 const { verifyTokenUser } = require('../middleware/auth')
 
 
-router.get('/users', async (req, res) => {
-    const result = await users.findMany()
-    return res.status(200).send(result)
-})
+
 
 router.get('/profile', verifyTokenUser, async (req, res) => {
     res.status(200).send({ user: req.user })
