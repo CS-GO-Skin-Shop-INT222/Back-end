@@ -40,7 +40,15 @@ router.get('/filterType/:id/:page', async (req, res) => {
   const result = await item.findMany({
       skip: calSkip(page , numberOfItem),
       take: numberOfItem,
-      where:{WeaponSkin:{Weapon:{TypeID : id }},  Publish : true}
+      where:{WeaponSkin:{Weapon:{TypeID : id }},  Publish : true},
+      include: {
+        WeaponSkin:{include:{
+          Skin :{select:{SkinName: true }},
+          Weapon:{select:{WeaponName: true}}
+        }},
+        Users: { select: { Name: true, Email: true } },
+        Item_Sticker: { include: { Sticker: { select: { StickerName: true } } } }
+      }
   })
   const totalItem = await item.count()
   return res.status(200).send({data:result,page:page, totalpage:CalPage(totalItem, numberOfItem)})
@@ -59,7 +67,15 @@ router.get('/filterWeapon/:id/:page',async (req, res)=>{
   const result = await item.findMany({
       skip: calSkip(page , numberOfItem),
       take: numberOfItem,
-      where:{WeaponSkin:{Weapon:{WeaponID : id }},  Publish : true}
+      where:{WeaponSkin:{Weapon:{WeaponID : id }},  Publish : true},
+      include: {
+        WeaponSkin:{include:{
+          Skin :{select:{SkinName: true }},
+          Weapon:{select:{WeaponName: true}}
+        }},
+        Users: { select: { Name: true, Email: true } },
+        Item_Sticker: { include: { Sticker: { select: { StickerName: true } } } }
+      }
   })
   const totalItem = await item.count()
   return res.status(200).send({data:result,page:page, totalpage:CalPage(totalItem, numberOfItem)})
