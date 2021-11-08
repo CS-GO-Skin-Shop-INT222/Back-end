@@ -9,8 +9,7 @@ const { verifyTokenAdmin } = require('../middleware/auth')
 
 
 router.get('/admin', verifyTokenAdmin, async (req, res) => {
-    const result = await admin.findMany()
-    return res.status(200).send({ data: result })
+    return res.status(200).send({profile:{ admin:req.admin , state:"admin" }})
 })
 
 router.post('/login', verifyTokenAdmin, async (req, res) => {
