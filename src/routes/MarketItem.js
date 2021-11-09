@@ -1,5 +1,6 @@
 const router = require("express").Router()
 const {item} = require('../models/model')
+const {verifyTokenUser}=require('../middleware/auth')
 
 
 router.get('/allmarket/:page', async (req, res) => {
@@ -98,8 +99,9 @@ router.get('/getitem/:id', async (req, res) => {
   return res.status(200).send(result)
 })
 
-router.put('/buyitem', async (req, res) => {
-    const result = await marketitem.create({
+router.put('/buyitem/:id',verifyTokenUser, async (req, res) => {
+    const id = req.params.id
+    const result = await item.update({
     data: req.body,
   })
   return res.send(result)

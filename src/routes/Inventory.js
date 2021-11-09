@@ -109,6 +109,10 @@ router.put('/sellItem/:id', async (req, res) => {
   if (result.count == 0) {
     return res.status(401).send({ msg: "Don't have item" })
   }
+  if(result.Publish=true){
+    return res.status(401).send({ msg: "the item is sell" })
+  
+  }
   return res.send({ msg: "this item is selling!" })
 })
 
