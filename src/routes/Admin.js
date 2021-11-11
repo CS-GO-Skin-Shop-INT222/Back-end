@@ -19,14 +19,14 @@ router.post('/login', verifyTokenAdmin, async (req, res) => {
             where: { Email: Email }
         })
         if (!(Email && Password)) {
-            return res.status(401).send({ msg: "Please fill information" })
+            return res.status(500).send({ msg: "Please fill information" })
         }
         if (!findedAmin) {
-            return res.status(401).send({ msg: "invalid email !" })
+            return res.status(500).send({ msg: "invalid email !" })
         }
         const validPassword = await bcrypt.compare(Password, findedAmin.Password)
         if (!validPassword) {
-            return res.status(401).send({ msg: "invalid password ! " })
+            return res.status(500).send({ msg: "invalid password ! " })
         }
         delete findedAmin.password
         const token = jwt.sign(findedAmin, process.env.TOKEN);
@@ -40,7 +40,7 @@ router.post('/login', verifyTokenAdmin, async (req, res) => {
 
 
     } catch (error) {
-        res.status(401).end("error")
+        res.status(500).end("error")
     }
 
 })
@@ -51,7 +51,7 @@ router.delete("/logout", verifyTokenAdmin, async (req, res) => {
         })
         res.status(200).send("logout finished")
     } catch (error) {
-        res.status(401).send({ error: error.message })
+        res.status(500).send({ error: error.message })
     }
 })
 router.get('/users', verifyTokenAdmin, async (req, res) => {
@@ -69,7 +69,7 @@ router.put("/addcredit/:id", verifyTokenAdmin, async (req, res) => {
         where: { UserID: id }
     })
     if (result.count == 0) {
-        return res.status(401).send("don't have user ")
+        return res.status(500).send("don't have user ")
     }
     return res.status(200).send(result)
 })

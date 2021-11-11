@@ -42,8 +42,7 @@ router.get('/getImage/:id', async (req, res) => {
         where:{ UserID: id }
     })
     let pathfile = path.join(__dirname + "../../../public/upload/" + result.ImageUser )
-    return res.status(200).sendFile(pathfile)
-    
+    return res.status(200).sendFile(pathfile)  
 })
 
 router.post('/uploadImage', verifyTokenUser, upload.single('avatar'), async (req, res) => {
@@ -53,7 +52,7 @@ router.post('/uploadImage', verifyTokenUser, upload.single('avatar'), async (req
         where: { UserID: req.user.UserID }
     })
     if (result.count == 0) {
-        return res.status(401).send("Don't have image")
+        return res.status(500).send("Don't have image")
     }
     return res.status(200).send({ msg: "uploadImage successfully! " })
 })

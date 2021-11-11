@@ -39,7 +39,7 @@ router.get('/MyItem/:id', async (req, res) => {
     })
     return res.status(200).send(result)
   } catch (error) {
-    res.status(401).end("error")
+    res.status(500).end("error")
   }
 })
 
@@ -65,7 +65,7 @@ router.get('/getitem/:id', async (req, res) => {
 router.post('/addItem', async (req, res) => {
   let { Price, Description, UserID, WeaponSkinID, Stickers } = req.body
   if (!(Price && Description && WeaponSkinID && UserID)) {
-    return res.status(401).send({ msg: "Please input item information!" })
+    return res.status(500).send({ msg: "Please input item information!" })
   }
   let result = await item.create({
     data: {
@@ -95,7 +95,7 @@ router.put('/editItem/:id', async (req, res) => {
     where: { ItemID: id }
   })
   if (result.count == 0) {
-    return res.status(401).send({ msg: "Don't have item" })
+    return res.status(500).send({ msg: "Don't have item" })
   }
   return res.send(result)
 })
@@ -107,10 +107,10 @@ router.put('/sellItem/:id', async (req, res) => {
     data: { Publish: true }
   })
   if (result.count == 0) {
-    return res.status(401).send({ msg: "Don't have item" })
+    return res.status(500).send({ msg: "Don't have item" })
   }
   if(result.Publish=true){
-    return res.status(401).send({ msg: "the item is sell" })
+    return res.status(500).send({ msg: "the item is sell" })
   
   }
   return res.send({ msg: "this item is selling!" })
@@ -123,7 +123,7 @@ router.delete("/deleteItem/:id", async (req, res) => {
     where: { ItemID: id }
   })
   if (result.count == 0) {
-    return res.status(401).send({ msg: "Don't have item" })
+    return res.status(500).send({ msg: "Don't have item" })
   }
   return res.status(200).send({ msg: "Delete successfully" + result })
 })
