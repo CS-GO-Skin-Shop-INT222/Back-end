@@ -62,16 +62,15 @@ router.get('/users', verifyTokenAdmin, async (req, res) => {
 router.put("/addcredit/:id", verifyTokenAdmin, async (req, res) => {
     let id = Number(req.params.id)
     let { Credit } = req.body
-    const result = await users.update({
-        data: {
-            Credit: Credit
-        },
-        where: { UserID: id }
-    })
-    if (result.count == 0) {
+    let addcredit  = await users.update({
+        where: { UserID: id },
+        data: { Credit: { increment: Credit } }
+      })
+ 
+    if (addcredit.count == 0) {
         return res.status(500).send("don't have user ")
     }
-    return res.status(200).send(result)
+    return res.status(200).send(addcredit)
 })
 
 
