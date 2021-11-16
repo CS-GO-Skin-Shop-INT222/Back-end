@@ -3,9 +3,10 @@ const { item } = require('../models/model')
 const { item_Sticker } = require('../models/model')
 const dayjs = require("dayjs")
 let lastUpdate = dayjs(Date.now()).format()
-
+const { verifyTokenUser } = require('../middleware/auth')
 
 router.get('/allItem', async (req, res) => {
+
   const result = await item.findMany({
     include: {
       WeaponSkin: {
@@ -21,10 +22,20 @@ router.get('/allItem', async (req, res) => {
 
   return res.status(200).send(result)
 })
-router.get('/MyItem/:id', async (req, res) => {
+router.get('/MyItem/:id/:page',verifyTokenUser, async (req, res) => {
   try {
+    const calSkip = (page, numberOfItem) => {
+      return (page - 1) * numberOfItem
+    }
+    const CalPage = (item, numberOfItem) => {
+      return Math.ceil(item / numberOfItem)
+    }
+    let page = Number(req.params.page)
+    let numberOfItem = 9
     const id = Number(req.params.id)
     const result = await item.findMany({
+      skip: calSkip(page, numberOfItem),
+      take: numberOfItem,
       where: { UserID: id },
       include: {
         WeaponSkin: {
@@ -37,7 +48,8 @@ router.get('/MyItem/:id', async (req, res) => {
         Item_Sticker: { include: { Sticker: { select: { StickerName: true } } } }
       }
     })
-    return res.status(200).send(result)
+    const totalItem = await item.count()
+    return res.status(200).send({ data: result, page: page, totalpage: CalPage(totalItem, numberOfItem) })
   } catch (error) {
     res.status(500).end("error")
   }
@@ -59,7 +71,7 @@ router.get('/getitem/:id', async (req, res) => {
       Item_Sticker: { include: { Sticker: { select: { StickerName: true } } } }
     }
   })
-  return res.send(result)
+  return res.status(200).send(result)
 })
 
 router.post('/addItem', async (req, res) => {
@@ -97,7 +109,7 @@ router.put('/editItem/:id', async (req, res) => {
   if (result.count == 0) {
     return res.status(500).send({ msg: "Don't have item" })
   }
-  return res.send(result)
+  return res.status(200).send(result)
 })
 
 router.put('/sellItem/:id', async (req, res) => {

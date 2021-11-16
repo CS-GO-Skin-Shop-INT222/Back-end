@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 const { users } = require('../models/model')
 const { verifyTokenUser } = require('../middleware/auth');
 
@@ -39,10 +40,17 @@ const upload = multer({
 router.get('/getImage/:id', async (req, res) => {
     const id = Number(req.params.id)
     const result = await users.findFirst({
-        where:{ UserID: id }
+        where:{ UserID: id },
+        select:{ImageUser: true}  
     })
-    let pathfile = path.join(__dirname + "../../../public/upload/" + result.ImageUser )
-    return res.status(200).sendFile(pathfile)  
+    if(!result.ImageUser){
+        return res.status(200).send({ msg: "Don't have ImageUser!"})
+    }
+    let pathfile =path.join(__dirname + "../../../public/upload/" + result.ImageUser )
+    if(!fs.existsSync(pathfile) ){
+        return res.status(200).send({ msg: "ImageUser is missing!"})
+    }
+    return res.status(200).sendFile(pathfile) 
 })
 
 router.post('/uploadImage', verifyTokenUser, upload.single('avatar'), async (req, res) => {

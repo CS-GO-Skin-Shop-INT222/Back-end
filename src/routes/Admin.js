@@ -40,7 +40,7 @@ router.post('/login', verifyTokenAdmin, async (req, res) => {
 
 
     } catch (error) {
-        res.status(500).end("error")
+        res.status(500).end({error: error.message})
     }
 
 })
@@ -60,6 +60,7 @@ router.get('/users', verifyTokenAdmin, async (req, res) => {
 })
 
 router.put("/addcredit/:id", verifyTokenAdmin, async (req, res) => {
+    try{
     let id = Number(req.params.id)
     let { Credit } = req.body
     let addcredit  = await users.update({
@@ -71,6 +72,9 @@ router.put("/addcredit/:id", verifyTokenAdmin, async (req, res) => {
         return res.status(500).send("don't have user ")
     }
     return res.status(200).send(addcredit)
+ }catch (error) {
+    res.status(500).send({ error: error.message })
+ }
 })
 
 

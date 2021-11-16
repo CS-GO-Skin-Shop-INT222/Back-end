@@ -16,8 +16,7 @@ app.get('/',(req, res)=>{
     res.status(200).send({msg: "welcome!"})
 })
 
-///import routes
-// const authRoute = require('./middleware/auth');
+
 const inventory = require('./routes/Inventory')
 const marketitem = require('./routes/MarketItem')
 const user = require('./routes/Users')
@@ -26,8 +25,7 @@ const admin = require('./routes/Admin')
 const ImageUser = require('./routes/ImageUser')
 const health = require('./routes/BeHealthy')
 const item =require('./routes/Item')
-/// route middlewares
-// app.use('/api/user', authRoute);
+
 app.use('/api/admins',admin)
 app.use('/api/inventory', inventory)
 app.use('/api/item', item)
