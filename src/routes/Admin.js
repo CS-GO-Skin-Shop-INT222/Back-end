@@ -12,7 +12,7 @@ router.get('/admin', verifyTokenAdmin, async (req, res) => {
     return res.status(200).send({user:{ admin:req.admin , state:"admin" }})
 })
 
-router.post('/login', verifyTokenAdmin, async (req, res) => {
+router.post('/login', async (req, res) => {
     try {
         const { Email, Password } = req.body;
         const findedAmin = await admin.findFirst({
