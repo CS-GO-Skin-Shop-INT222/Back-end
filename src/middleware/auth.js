@@ -7,7 +7,7 @@ const verifyTokenUser = async(req, res, next) => {
     try{
     const token = req.body.token ||  req.header('Authorization').replace('Bearer ','');
     if(!token ){
-        return res.status(500).send("A token is require for authentication")
+        return res.status(401).send("A token is require for authentication")
     }
         const decoded = jwt.verify(token, process.env.TOKEN);
         const user = await users.findFirst({
@@ -23,7 +23,7 @@ const verifyTokenAdmin = async(req, res, next) => {
     try{
     const token = req.body.token ||  req.header('Authorization').replace('Bearer ','');
     if(!token ){
-        return res.status(500).send("A token is require for authentication")
+        return res.status(401).send("A token is require for authentication")
     }
         const decoded = jwt.verify(token, process.env.TOKEN);
         const admin = await Admin.findFirst({
