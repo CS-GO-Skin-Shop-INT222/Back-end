@@ -182,7 +182,7 @@ router.delete("/deleteItem/:id",verifyTokenUser, async (req, res) => {
     where: { ItemID: id }
   })
   if (result.count == 0) {
-    return res.status(500).send({ msg: "Don't have item" })
+    return res.status(404).send({ msg: "Don't have item" })
   }
   return res.status(200).send({ msg: "Delete successfully" + result })
 })

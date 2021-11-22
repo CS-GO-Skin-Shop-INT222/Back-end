@@ -27,7 +27,7 @@ router.post('/addsticker', async (req, res) => {
     where: { StickerID: StickerID }
   })
   if (oldsticker) {
-    return res.status(500).send({ msg: "Sticker is already exist" })
+    return res.status(404).send({ msg: "Sticker is already exist" })
   }
 
   return res.status(200).send(result)

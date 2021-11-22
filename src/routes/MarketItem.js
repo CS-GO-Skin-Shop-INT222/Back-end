@@ -131,17 +131,17 @@ router.put('/buyItem/:id', verifyTokenUser, async (req, res) => {
       where: { ItemID: id }
     })
     if (!itemtosell) {
-      return res.status(500).send({ msg: "noting item" })
+      return res.status(400).send({ msg: "noting item" })
     }
     let userloginCredit = await users.findFirst({
       where: { UserID: req.user.UserID },
       select: { Credit: true }
     })
     if (itemtosell.UserID == req.user.UserID) {
-      return res.status(500).send({ msg: "item is your" })
+      return res.status(400).send({ msg: "item is your" })
     }
     if (userloginCredit.Credit < itemtosell.Price ) {
-      return res.status(500).send({ msg: "Credit is not enough" })
+      return res.status(400).send({ msg: "Credit is not enough" })
     }
     let expendcredit = await users.update({
       where: { UserID: req.user.UserID },
