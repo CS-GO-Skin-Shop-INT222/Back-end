@@ -25,7 +25,7 @@ router.get('/user/:id', async (req, res) => {
 router.post('/register', async (req, res) => {
     const { Name, Email, Tel, Password, Credit } = req.body
     if (!(Name && Email && Tel && Password && Credit)) {
-        return res.status(500).send("input your info")
+        return res.status(400).send("input your info")
     }
     const oldUserName = await users.findFirst({
         where: { Name: Name }
@@ -35,7 +35,7 @@ router.post('/register', async (req, res) => {
     })
     if (oldUserName || oldUserEmail) {
 
-        return res.status(500).send({ msg: "User is already exist" })
+        return res.status(400).send({ msg: "User is already exist" })
     }
     let encryptedPassword = await bcrypt.hash(Password, 10);
     const hashPassword = await bcrypt.hash(Password, encryptedPassword)
@@ -58,14 +58,14 @@ router.post('/login', async (req, res) => {
             where: { Email: Email }
         })
         if (!(Email && Password)) {
-            return res.status(500).send({ msg: "Please fill information" })
+            return res.status(400).send({ msg: "Please fill information" })
         }
         if (!findedUser) {
-            return res.status(500).send({ msg: "invalid email !" })
+            return res.status(400).send({ msg: "invalid email !" })
         }
         const validPassword = await bcrypt.compare(Password, findedUser.Password)
         if (!validPassword) {
-            return res.status(500).send({ msg: "invalid password ! " })
+            return res.status(400).send({ msg: "invalid password ! " })
         }
         delete findedUser.password
         const token = jwt.sign(findedUser, process.env.TOKEN);
@@ -109,7 +109,7 @@ router.put('/edituser/:id',verifyTokenUser, async (req, res) => {
         where: { UserID: id }
     })
     if (result.count == 0) {
-        return res.status(500).send("don't have user ")
+        return res.status(400).send("don't have user ")
     }
     return res.status(200).send(result)
 })
