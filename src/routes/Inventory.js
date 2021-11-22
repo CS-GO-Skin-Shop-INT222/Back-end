@@ -139,7 +139,7 @@ router.put('/editItem/:id',verifyTokenUser, async (req, res) => {
     where: { ItemID: id }
   })
   if (result.count == 0) {
-    return res.status(500).send({ msg: "Don't have item" })
+    return res.status(400).send({ msg: "Don't have item" })
   }
   return res.status(200).send(result)
 })
@@ -151,10 +151,10 @@ router.put('/sellItem/:id',verifyTokenUser, async (req, res) => {
     data: { Publish: true }
   })
   if (result.count == 0) {
-    return res.status(500).send({ msg: "Don't have item" })
+    return res.status(404).send({ msg: "Don't have item" })
   }
   if(result.Publish=true){
-    return res.status(500).send({ msg: "the item is sell" })
+    return res.status(400).send({ msg: "the item is sell" })
   
   }
   return res.status(200).send({ msg: "this item is selling!" })
@@ -167,10 +167,10 @@ router.put('/cancelsales/:id',verifyTokenUser, async (req, res) => {
     data: { Publish: false }
   })
   if (result.count == 0) {
-    return res.status(500).send({ msg: "Don't have item" })
+    return res.status(404).send({ msg: "Don't have item" })
   }
   if(result.Publish=true){
-    return res.status(500).send({ msg: "this item is not sell" })
+    return res.status(404).send({ msg: "this item is not sell" })
   
   }
   return res.status(200).send({ msg: "cancel finish!" })
