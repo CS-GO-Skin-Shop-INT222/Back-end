@@ -51,7 +51,7 @@ router.get('/MyItem/:id/:page',verifyTokenUser, async (req, res) => {
     const totalItem = await item.count()
     return res.status(200).send({ data: result, page: page, totalpage: CalPage(totalItem, numberOfItem) })
   } catch (error) {
-    res.status(500).end("error")
+    res.status(500).end({ error: error.message })
   }
 })
 
@@ -84,7 +84,7 @@ router.get('/MyItemselling/:id/:page',verifyTokenUser, async (req, res) => {
     const totalItem = await item.count()
     return res.status(200).send({ data: result, page: page, totalpage: CalPage(totalItem, numberOfItem) })
   } catch (error) {
-    res.status(500).end("error")
+    res.status(500).end({ error: error.message})
   }
 })
 

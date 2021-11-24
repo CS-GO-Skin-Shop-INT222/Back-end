@@ -49,7 +49,7 @@ router.delete("/logout", verifyTokenAdmin, async (req, res) => {
         await adminTokens.deleteMany({
             where: { token: req.Token }
         })
-        res.status(200).send("logout finished")
+        res.status(200).send({ msg:"logout finished"})
     } catch (error) {
         res.status(500).send({ error: error.message })
     }
@@ -69,7 +69,7 @@ router.put("/addcredit/:id", verifyTokenAdmin, async (req, res) => {
       })
  
     if (addcredit.count == 0) {
-        return res.status(400).send("don't have user ")
+        return res.status(400).send({ msg:"don't have user "})
     }
     return res.status(200).send(addcredit)
  }catch (error) {
