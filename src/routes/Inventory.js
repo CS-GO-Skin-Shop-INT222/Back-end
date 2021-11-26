@@ -48,7 +48,10 @@ router.get('/MyItem/:id/:page',verifyTokenUser, async (req, res) => {
         Item_Sticker: { include: { Sticker: { select: { StickerName: true } } } }
       }
     })
-    const totalItem = await item.count()
+    const totalItem = await item.count({
+      where: { UserID: id, Publish : false}
+    })
+  
     return res.status(200).send({ data: result, page: page, totalpage: CalPage(totalItem, numberOfItem) })
   } catch (error) {
     res.status(500).end({ error: error.message })
@@ -81,8 +84,11 @@ router.get('/MyItemselling/:id/:page',verifyTokenUser, async (req, res) => {
         Item_Sticker: { include: { Sticker: { select: { StickerName: true } } } }
       }
     })
-    const totalItem = await item.count()
+    const totalItem = await item.count({
+      where: { UserID: id, Publish : true}
+    })
     return res.status(200).send({ data: result, page: page, totalpage: CalPage(totalItem, numberOfItem) })
+    
   } catch (error) {
     res.status(500).end({ error: error.message})
   }
@@ -120,7 +126,6 @@ router.post('/addItem',verifyTokenUser, async (req, res) => {
       UserID: UserID,
     }
   })
-  console.log(result)
   for (let i = 0; i < Stickers.length; i++) {
     await item_Sticker.createMany({
       data: {

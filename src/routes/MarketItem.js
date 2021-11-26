@@ -29,7 +29,9 @@ router.get('/allmarket/:page', async (req, res) => {
         Item_Sticker: { include: { Sticker: { select: { StickerName: true } } } }
       }
     })
-    const totalItem = await item.count()
+    const totalItem = await item.count({
+      where: {Publish : true }
+    })
     return res.status(200).send({ data: result, page: page, totalpage: CalPage(totalItem, numberOfItem) })
   } catch (error) {
     res.status(500).send({ error: error.message })
@@ -61,7 +63,9 @@ router.get('/filterType/:id/:page', async (req, res) => {
       Item_Sticker: { include: { Sticker: { select: { StickerName: true } } } }
     }
   })
-  const totalItem = await item.count()
+  const totalItem = await item.count({
+    where: {Publish : true }
+  })
   return res.status(200).send({ data: result, page: page, totalpage: CalPage(totalItem, numberOfItem) })
   } catch (error) {
     res.status(500).send({ error: error.message })
@@ -94,7 +98,9 @@ router.get('/filterWeapon/:id/:page', async (req, res) => {
       Item_Sticker: { include: { Sticker: { select: { StickerName: true } } } }
     }
   })
-  const totalItem = await item.count()
+  const totalItem = await item.count({
+    where: {Publish : true }
+  })
   return res.status(200).send({ data: result, page: page, totalpage: CalPage(totalItem, numberOfItem) })
 } catch (error) {
   res.status(500).send({ error: error.message })
