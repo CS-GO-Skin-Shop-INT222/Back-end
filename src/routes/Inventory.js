@@ -139,9 +139,11 @@ router.post('/addItem',verifyTokenUser, async (req, res) => {
 
 router.put('/editItem/:id',verifyTokenUser, async (req, res) => {
   let id = Number(req.params.id)
-  const result = await item.updateMany({
-    data: req.body,
-    where: { ItemID: id }
+  let { Price , Description } = req.body
+  const result = await item.update({ 
+    where: { ItemID: id },
+    data: {Price : Price , Description :Description}
+   
   })
   if (result.count == 0) {
     return res.status(400).send({ msg: "Don't have item" })
