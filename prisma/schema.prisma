@@ -1,55 +1,116 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialActions"]
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
+model Admin {
+  AdminID     Int           @id @unique
+  AdminName   String        @unique @db.VarChar(45)
+  Password    String        @db.VarChar(256)
+  Email       String        @unique @db.VarChar(45)
+  AdminTokens AdminTokens[]
 }
 
-model users {
-  UserID     String       @id 
-  Name       String       @unique
-  Email      String       @unique
-  Tel        String 
-  Password   String
-  Credit     Int
-  MarketItem MarketItem[]
+model AdminTokens {
+  TokensID Int    @id @default(autoincrement())
+  Token    String @db.VarChar(500)
+  AdminID  Int
+  Admin    Admin  @relation(fields: [AdminID], references: [AdminID], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([AdminID], name: "fk_AdminTokens_Admin1_idx")
 }
 
-model MarketItem {
-  ItemID             String               @id
-  Name_item          String
-  Price              String
-  Description        String
-  Date               DateTime
-  UserID             String
-  TypeID             String
-  users              users                @relation(fields: [UserID], references: [UserID])
-  TypeOfItem         TypeOfItem           @relation(fields: [TypeID], references: [TypeID])
-  MarketItem_Sticker MarketItem_Sticker[]
-}
-
-model TypeOfItem {
-  TypeID     String       @id
-  TypeName   String
-  MarketItem MarketItem[]
-}
-
-model MarketItem_Sticker {
-  MarketItem_ItemID      String
-  MarketItem_User_UserID String
-  StickerID              String
-
-  MarketItem MarketItem @relation(fields: [MarketItem_ItemID], references: [ItemID])
-  Sticker    Sticker    @relation(fields: [StickerID], references: [StickerID])
-
-
-  @@id([MarketItem_ItemID, MarketItem_User_UserID, StickerID])
+model Skin {
+  SkinID     String       @id @unique @db.VarChar(20)
+  SkinName   String       @db.VarChar(45)
+  WeaponSkin WeaponSkin[]
 }
 
 model Sticker {
-  StickerID          String               @id
-  StickerName        String
-  MarketItem_Sticker MarketItem_Sticker[]
+  StickerID    String         @id @unique @db.VarChar(20)
+  StickerName  String         @unique @db.VarChar(100)
+  Item_Sticker Item_Sticker[]
+}
+
+model TypeOfWeapon {
+  TypeID   String   @id @unique @db.VarChar(20)
+  TypeName String   @unique @db.VarChar(45)
+  Weapon   Weapon[]
+}
+
+model UserTokens {
+  TokensID Int    @id @default(autoincrement())
+  Token    String @db.VarChar(500)
+  UserID   Int
+  Users    Users  @relation(fields: [UserID], references: [UserID], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([UserID], name: "fk_UserTokens_Users1_idx")
+}
+
+model Users {
+  UserID     Int          @id @unique @default(autoincrement())
+  Name       String       @unique @db.VarChar(20)
+  Email      String       @unique @db.VarChar(45)
+  Tel        String       @db.VarChar(45)
+  Password   String       @db.VarChar(256)
+  Credit     Int?
+  ImageUser  String?      @db.VarChar(100)
+  Item       Item[]
+  UserTokens UserTokens[]
+}
+
+model Weapon {
+  WeaponID     String       @id @unique @db.VarChar(20)
+  WeaponName   String       @unique @db.VarChar(45)
+  TypeID       String       @db.VarChar(20)
+  TypeOfWeapon TypeOfWeapon @relation(fields: [TypeID], references: [TypeID], onDelete: NoAction, onUpdate: NoAction)
+  WeaponSkin   WeaponSkin[]
+
+  @@index([TypeID], name: "fk_Weapon_TypeOfWeapon1_idx")
+}
+
+model Item {
+  ItemID       Int            @unique @default(autoincrement())
+  Price        Int
+  Description  String         @db.VarChar(256)
+  Date         DateTime       @db.Timestamp(0)
+  WeaponSkinID String         @db.VarChar(45)
+  UserID       Int
+  Publish      Boolean        @default(false)
+  Users        Users          @relation(fields: [UserID], references: [UserID], onDelete: Cascade, onUpdate: Cascade)
+  WeaponSkin   WeaponSkin     @relation(fields: [WeaponSkinID], references: [WeaponSkinID], onDelete: NoAction, onUpdate: NoAction)
+  Item_Sticker Item_Sticker[]
+
+  @@id([ItemID, WeaponSkinID])
+  @@index([UserID], name: "fk_Item_Users1_idx")
+  @@index([WeaponSkinID], name: "fk_Item_WeaponSkin1_idx")
+}
+
+model Item_Sticker {
+  ItemID    Int
+  StickerID String  @db.VarChar(20)
+  Item      Item    @relation(fields: [ItemID], references: [ItemID], onDelete: Cascade, onUpdate: NoAction)
+  Sticker   Sticker @relation(fields: [StickerID], references: [StickerID], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([ItemID, StickerID])
+  @@index([ItemID], name: "fk_MarketItem_has_Sticker_MarketItem1_idx")
+  @@index([StickerID], name: "fk_MarketItem_has_Sticker_Sticker1_idx")
+}
+
+model WeaponSkin {
+  WeaponSkinID String @id @db.VarChar(45)
+  SkinID       String @db.VarChar(20)
+  WeaponID     String @db.VarChar(20)
+  imageURL     String @db.VarChar(500)
+  Skin         Skin   @relation(fields: [SkinID], references: [SkinID], onDelete: NoAction, onUpdate: NoAction)
+  Weapon       Weapon @relation(fields: [WeaponID], references: [WeaponID], onDelete: NoAction, onUpdate: NoAction)
+  Item         Item[]
+
+  @@index([SkinID], name: "fk_WeaponSkin_Skin1")
+  @@index([WeaponID], name: "fk_WeaponSkin_Weapon1_idx")
 }

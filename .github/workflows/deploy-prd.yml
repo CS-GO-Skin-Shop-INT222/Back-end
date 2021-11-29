@@ -1,0 +1,20 @@
+name: deploy-prd
+on:
+  workflow_dispatch:
+    inputs:
+      deploy-version:
+        description: 'Version to deploy'
+        required: true
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      # - name: deploy with Execute SSH commmands on remote server
+      #   uses: JimCronqvist/action-ssh@0.1.1
+      #   with:
+      #     hosts: 'user@domain.com'
+      #     privateKey: ${{ secrets.PRIVATE_KEY }}
+      #     command: |
+      #       ls -lah
