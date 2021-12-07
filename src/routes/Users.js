@@ -103,7 +103,7 @@ router.put('/edituser/:id', verifyTokenUser, async (req, res) => {
     const oldUserName = await users.findFirst({
         where: { Name: Name }
     })
-    if (oldUserName.Name == Name && oldUserName.UserID != id) {
+    if (oldUserName == Name && oldUserName.UserID != id) {
         return res.status(400).send({ msg: "Name is already exist" })
     }
     if (Name) {
