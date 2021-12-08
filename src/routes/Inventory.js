@@ -153,21 +153,30 @@ router.put('/editItem/:id',verifyTokenUser, async (req, res) => {
 
 router.put('/sellItem/:id',verifyTokenUser, async (req, res) => {
   let id = Number(req.params.id)
-  const result = await item.update({
+  const checkPublish = await item.findFirst({
+    where: { ItemID: id },
+  })
+  if(checkPublish.Publish == true){
+    return res.status(404).send({ msg: "this item is Sold " })
+  } 
+    const result = await item.update({
     where: { ItemID: id },
     data: { Publish: true }
   })
-  if (result.count == 0) {
+   if (result.count == 0) {
     return res.status(404).send({ msg: "Don't have item" })
   }
-  if(result.Publish == true){
-    return res.status(400).send({ msg: "the item is sell" })
   
-  }
   return res.status(200).send({ msg: "this item is selling!" })
 })
 router.put('/cancelsales/:id',verifyTokenUser, async (req, res) => {
   let id = Number(req.params.id)
+  const checkPublish = await item.findFirst({
+    where: { ItemID: id },
+  })
+  if(checkPublish.Publish == false){
+    return res.status(404).send({ msg: "this item is not Sold " })
+  }
   const result = await item.updateMany({
     data: req.body,
     where: { ItemID: id },
@@ -176,10 +185,7 @@ router.put('/cancelsales/:id',verifyTokenUser, async (req, res) => {
   if (result.count == 0) {
     return res.status(404).send({ msg: "Don't have item" })
   }
-  if(result.Publish == true){
-    return res.status(404).send({ msg: "this item is not sell" })
-  
-  }
+
   return res.status(200).send({ msg: "cancel finish!" })
 })
 
