@@ -19,7 +19,7 @@ router.get('/showweapon/:id', async (req, res) => {
 router.get('/showskin/:id', async (req, res) => {
     const id = req.params.id
     const result = await weaponSkin.findMany({
-        where: { SkinID: id },
+        where: { WeaponSkinID: id },
         include: {
             Weapon: { select: { WeaponName: true } }
         }
