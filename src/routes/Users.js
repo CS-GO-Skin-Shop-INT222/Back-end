@@ -96,22 +96,41 @@ router.delete("/logout", verifyTokenUser, async (req, res) => {
 })
 
 
-router.put('/edituser/:id',verifyTokenUser, async (req, res) => {
+router.put('/edituser/:id', verifyTokenUser, async (req, res) => {
     let id = Number(req.params.id)
-    let{Name , Tel ,Password  }=req.body
+    let { Name, Tel, Password } = req.body
     let encryptedPassword = await bcrypt.hash(Password, 10);
-    const result = await users.update({
-        data: { 
-            Name: Name,
-            Password: encryptedPassword,
-            Tel : Tel
-        },
-        where: { UserID: id }
+    const oldUserName = await users.findFirst({
+        where: { Name: Name }
     })
-    if (result.count == 0) {
-        return res.status(400).send("don't have user ")
+    if (oldUserName == Name && oldUserName.UserID != id) {
+        return res.status(400).send({ msg: "Name is already exist" })
     }
-    return res.status(200).send(result)
+    if (Name) {
+       await users.update({
+            data: {
+                Name: Name,
+            },
+            where: { UserID: id }
+        })
+    }
+    if (Tel) {
+       await users.update({
+            data: {
+                Tel: Tel
+            },
+            where: { UserID: id }
+        })
+    }
+    if (Password) {
+        await users.update({
+            data: {
+                Password: encryptedPassword
+            },
+            where: { UserID: id }
+        })
+    }
+   return res.status(200).send({ msg:" update successfully!"})
 })
 
 
